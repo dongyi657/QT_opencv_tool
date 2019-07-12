@@ -54,6 +54,8 @@ public:
     void Controlinfo(args_info default_info);
     bool IsInPic(int x, int y);
     void Image_move(Mat *src, Mat *dst);
+    void QImage_fill_info(QImage *src, QImage *dst, QPoint I_abs_point);
+    QPoint W2I_abs_point(QPoint m_point);
     void Draw_Pixel_Info(QPoint m_point);
 private slots:
     void on_pushButton_clicked();

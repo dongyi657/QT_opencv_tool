@@ -66,20 +66,57 @@ bool MainWindow::IsInPic(int x, int y){
 
     return false;
 }
+
+QPoint MainWindow::W2I_abs_point(QPoint m_point){
+    QPoint I_abs_point;
+    if(ui->label_OriginalImg->geometry().contains(m_point)){
+        I_abs_point.setX(m_point.x()-ui->label_OriginalImg->geometry().left());
+        I_abs_point.setY(m_point.y()-ui->label_OriginalImg->geometry().top());
+    }
+    if (ui->label_ProcessedImg->geometry().contains(m_point)){
+        I_abs_point.setX(m_point.x()-ui->label_ProcessedImg->geometry().left());
+        I_abs_point.setY(m_point.y()-ui->label_ProcessedImg->geometry().top());
+    }
+    return I_abs_point;
+}
+
+void MainWindow::QImage_fill_info(QImage *src, QImage *dst, QPoint I_abs_point){
+    QRgb * line = (QRgb *)src->scanLine(I_abs_point.y());
+    for(int y = 0; y<   dst->height() ; y++){
+        for(int x = 0; x< dst->width(); x++){
+            dst->setPixel(x,y, qRgb(qRed(line[I_abs_point.x()]), qGreen(line[I_abs_point.x()]), qRed(line[I_abs_point.x()])));
+        }
+    }
+    qDebug()<<I_abs_point<<qRed(line[I_abs_point.x()])<< qGreen(line[I_abs_point.x()])<< qRed(line[I_abs_point.x()]);
+}
+
 void MainWindow::Draw_Pixel_Info(QPoint m_point){
-    QPoint m_L_point, m_R_point;
-    Mat leftImage, rightImage;
-    Mat l_pixel_info, r_pixel_info;
-    if(m_point.x() > ui->label_OriginalImg->geometry().left() && m_point.x() < ui->label_OriginalImg->geometry().right() && \
-            m_point.y() > ui->label_OriginalImg->geometry().top() && m_point.y() < ui->label_OriginalImg->geometry().bottom()){
-        m_L_point.setX(m_point.x()-ui->label_OriginalImg->geometry().left());
-        m_L_point.setY(m_point.y()-ui->label_OriginalImg->geometry().top());
-        leftImage=QImageToMat(ui->label_OriginalImg->pixmap()->toImage());
-        QColor L_poxel_info,R_poxel_info;
-       // QColor L_poxel_info=ui->label_OriginalImg->pixmap()->toImage().color(m_L_point.y()*leftImage.cols+m_L_point.x());
-        ui->label_Pixel_info_L->pixmap()->toImage().fill( QColor(0, 0, 255, 0));
-       // QColor R_poxel_info=ui->label_OriginalImg->pixmap()->toImage().color(m_L_point.y()*leftImage.cols+m_L_point.x());
-        ui->label_Pixel_info_R->pixmap()->toImage().fill( QColor(0, 0, 255, 0));
+    QPoint I_abs_point=W2I_abs_point(m_point);
+    QImage leftImage, rightImage;
+    QImage *l_pixel_info= new QImage(ui->label_Pixel_info_L->width(), ui->label_Pixel_info_L->height(), QImage::Format_ARGB32);
+    QImage *r_pixel_info= new QImage(ui->label_Pixel_info_R->width(), ui->label_Pixel_info_R->height(), QImage::Format_ARGB32);
+    if(m_isOpenFile){
+        leftImage=ui->label_OriginalImg->pixmap()->toImage();
+        QImage_fill_info(&leftImage, l_pixel_info, I_abs_point);
+        ui->label_Pixel_info_L->setPixmap(QPixmap::fromImage(l_pixel_info->scaled(ui->label_Pixel_info_L->width(), ui->label_Pixel_info_L->height(), Qt::KeepAspectRatio)));
+        QColor srcColor = leftImage.pixelColor(I_abs_point);
+        QString label_L_pixel_count="R:" + QString::number(srcColor.red()) + " G:" + QString::number(srcColor.green()) + " B:" + QString::number(srcColor.blue());
+        ui->label_L_pixel_count->setText(label_L_pixel_count);
+        ui->label_L_pixel_count->setAlignment(Qt::AlignRight);
+        //qDebug()<<I_abs_point<<R:qRed(line[I_abs_point.x()])<< G:qGreen(line[I_abs_point.x()])<< B:qRed(line[I_abs_point.x()]);
+    }
+        // QColor R_poxel_info=ui->label_OriginalImg->pixmap()->toImage().color(m_L_point.y()*leftImage.cols+m_L_point.x());
+
+    if(isTransform){
+        rightImage=ui->label_ProcessedImg->pixmap()->toImage();
+        QImage_fill_info(&rightImage, r_pixel_info, I_abs_point);
+        ui->label_Pixel_info_R->setPixmap(QPixmap::fromImage(r_pixel_info->scaled(ui->label_Pixel_info_R->width(), ui->label_Pixel_info_R->height(), Qt::KeepAspectRatio)));
+        QColor dstColor = rightImage.pixelColor(I_abs_point);
+        QString label_R_pixel_count="R:" + QString::number(dstColor.red()) + " G:" + QString::number(dstColor.green()) + " B:" + QString::number(dstColor.blue());
+        ui->label_R_pixel_count->setText(label_R_pixel_count);
+        ui->label_R_pixel_count->setAlignment(Qt::AlignLeft);
+    }
+    // ui->label_Pixel_info_R->pixmap()->toImage().fill( QColor(0, 0, 255, 0));
       //  qDebug()<<rows<<cols<<temp.type();
         /*if(leftImage.type() == CV_8UC3){
             Vec3b *p;
@@ -104,11 +141,10 @@ void MainWindow::Draw_Pixel_Info(QPoint m_point){
                 }
             }
         }*/
-        qDebug()<< m_L_point;
 
         //ui->label_Pixel_info_R->setStyleSheet(QStringLiteral("background-color: rgb(255, 0, 0);"));
         //ui->label_Pixel_info_L->styleSheet().->setPixmap(QPixmap::fromImage(MatToQImage(l_pixel_info)));
-    }
+
 }
 
 bool MainWindow::event(QEvent * event){
@@ -121,7 +157,8 @@ bool MainWindow::event(QEvent * event){
            {
                press=true;
                QApplication::setOverrideCursor(Qt::OpenHandCursor); //设置鼠标样式
-               MousePosLabel->setText("("+QString::number(mouse->pos().x())+","+QString::number(mouse->pos().y())+")");
+               QPoint left_addr=W2I_abs_point(mouse->pos());
+               MousePosLabel->setText("("+QString::number(left_addr.x())+","+QString::number(left_addr.y())+")");
                PreDot = mouse->pos();
            }
            if(mouse->button()==Qt::LeftButton && IsInPic(mouse->pos().x(),mouse->pos().y()))
@@ -146,7 +183,8 @@ bool MainWindow::event(QEvent * event){
         if(mouse->button()==Qt::LeftButton && IsInPic(mouse->pos().x(),mouse->pos().y()))
         {
             QApplication::setOverrideCursor(Qt::ArrowCursor); //改回鼠标样式
-            MousePosLabel->setText("("+QString::number(mouse->pos().x())+","+QString::number(mouse->pos().y())+")");
+            QPoint left_addr=W2I_abs_point(mouse->pos());
+            MousePosLabel->setText("("+QString::number(left_addr.x())+","+QString::number(left_addr.y())+")");
             Draw_Pixel_Info(mouse->pos());
         }
     }
