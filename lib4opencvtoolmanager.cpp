@@ -39,6 +39,7 @@ lib4opencvtool* Lib4opencvtoolManager::create(args_info *_arginfo)
     return NULL;
 };
 
+
 void Lib4opencvtoolManager::destroy(lib4opencvtool* lib4opencvPtr) {
     delete lib4opencvPtr;
 };

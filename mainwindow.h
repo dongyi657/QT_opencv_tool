@@ -54,7 +54,7 @@ public:
     void Controlinfo(args_info default_info);
     bool IsInPic(int x, int y);
     void Image_move(Mat *src, Mat *dst);
-
+    void Draw_Pixel_Info(QPoint m_point);
 private slots:
     void on_pushButton_clicked();
     void on_pushButton_SAVE_clicked();
@@ -78,7 +78,8 @@ private slots:
     void on_lineEdit_4_textEdited(const QString &arg1);
     void on_lineEdit_5_textEdited(const QString &arg1);
 
-    void on_SUR_listWidget_itemDoubleClicked(QListWidgetItem *item);
+    void on_SUR_listWidget_itemClicked(QListWidgetItem *item);
+    void on_EXE_listWidget_itemClicked(QListWidgetItem *item);
     void on_EXE_listWidget_itemDoubleClicked(QListWidgetItem *item);
 
 protected:

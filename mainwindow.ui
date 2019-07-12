@@ -510,6 +510,35 @@
      <string>TextLabel</string>
     </property>
    </widget>
+   <widget class="QLabel" name="label_Pixel_info_L">
+    <property name="geometry">
+     <rect>
+      <x>600</x>
+      <y>470</y>
+      <width>51</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_Pixel_info_R">
+    <property name="geometry">
+     <rect>
+      <x>670</x>
+      <y>470</y>
+      <width>41</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -517,7 +546,7 @@
      <x>0</x>
      <y>0</y>
      <width>1358</width>
-     <height>23</height>
+     <height>26</height>
     </rect>
    </property>
   </widget>

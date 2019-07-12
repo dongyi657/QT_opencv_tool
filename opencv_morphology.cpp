@@ -31,13 +31,7 @@ opencv_morphology::opencv_morphology(args_info *_arginfo):arginfo(_arginfo)
 
 opencv_morphology::~opencv_morphology()
 {
-    for (int i=0;i < BOX_NUM; i++)
-        arginfo->boxinfo[i]=defualt_boxinfo[i];
-    for (int i=0;i < SLIDER_NUM; i++)
-        arginfo->sliderinfo[i]=defualt_slider[i];
-    for (int i=0;i < LINE_NUM; i++)
-        arginfo->lineinfo[i]=defualt_line[i];
-    arginfo->argsuse = 0;
+    memset(arginfo, 0, sizeof(*arginfo));
 }
 
 int16_t opencv_morphology::GetArgsUse(){
@@ -60,11 +54,11 @@ void opencv_morphology::GetDefualtInfo(args_info *readargsinfo){
 
 QString opencv_morphology::ReadInfo(args_info readargsinfo){
     readargsinfo=*arginfo;
-    QString s=Methodname+":"+QString::number(  arginfo->boxinfo[0].num)+" "+ QString::number(  arginfo->sliderinfo[0].value);
+    QString s=Methodname+":"+arginfo->boxinfo[0].s.at(arginfo->boxinfo[0].num)+" "+ QString::number(arginfo->sliderinfo[0].value);
     return s;
 }
 
-int opencv_morphology::WriteInfo(const args_info writearginfo){
+int opencv_morphology::WriteInfo(args_info writearginfo){
     for (int i=0;i < BOX_NUM; i++)
           arginfo->boxinfo[i].num=writearginfo.boxinfo[i].num;
     for (int i=0;i < SLIDER_NUM; i++)

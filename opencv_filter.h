@@ -16,7 +16,7 @@ public:
     virtual QString Getmethod();
     virtual void GetDefualtInfo( args_info *readargsinfo);
     virtual QString ReadInfo( args_info readargsinfo);
-    virtual int WriteInfo(const args_info writearginfo);
+    virtual int WriteInfo(args_info writearginfo);
     virtual bool MatTransform(Mat *srcMat,  Mat *dstMat);
 };
 

@@ -8,6 +8,7 @@
 
 #ifdef LIB4OPENCVTOOLMANAGER_H
 extern QStringList includeMethods();
+extern lib4opencvtool* chooseMethods(args_info *_arginfo);
 #endif
 extern QImage MatToQImage(const cv::Mat& mat);
 extern cv::Mat QImageToMat(QImage image);
@@ -28,7 +29,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //初始化控件
 #ifdef LIB4OPENCVTOOLMANAGER_H
-        ui->SUR_listWidget->addItems(includeMethods());
+    ui->SUR_listWidget->addItems(includeMethods());
 #endif
 
     //鼠标事件
@@ -55,7 +56,6 @@ MainWindow::~MainWindow()
 }
 
 bool MainWindow::IsInPic(int x, int y){
-
     if(x > ui->label_OriginalImg->geometry().left() && x < ui->label_OriginalImg->geometry().right() && \
             y > ui->label_OriginalImg->geometry().top() && y < ui->label_OriginalImg->geometry().bottom())
         return true;
@@ -66,21 +66,67 @@ bool MainWindow::IsInPic(int x, int y){
 
     return false;
 }
+void MainWindow::Draw_Pixel_Info(QPoint m_point){
+    QPoint m_L_point, m_R_point;
+    Mat leftImage, rightImage;
+    Mat l_pixel_info, r_pixel_info;
+    if(m_point.x() > ui->label_OriginalImg->geometry().left() && m_point.x() < ui->label_OriginalImg->geometry().right() && \
+            m_point.y() > ui->label_OriginalImg->geometry().top() && m_point.y() < ui->label_OriginalImg->geometry().bottom()){
+        m_L_point.setX(m_point.x()-ui->label_OriginalImg->geometry().left());
+        m_L_point.setY(m_point.y()-ui->label_OriginalImg->geometry().top());
+        leftImage=QImageToMat(ui->label_OriginalImg->pixmap()->toImage());
+        QColor L_poxel_info,R_poxel_info;
+       // QColor L_poxel_info=ui->label_OriginalImg->pixmap()->toImage().color(m_L_point.y()*leftImage.cols+m_L_point.x());
+        ui->label_Pixel_info_L->pixmap()->toImage().fill( QColor(0, 0, 255, 0));
+       // QColor R_poxel_info=ui->label_OriginalImg->pixmap()->toImage().color(m_L_point.y()*leftImage.cols+m_L_point.x());
+        ui->label_Pixel_info_R->pixmap()->toImage().fill( QColor(0, 0, 255, 0));
+      //  qDebug()<<rows<<cols<<temp.type();
+        /*if(leftImage.type() == CV_8UC3){
+            Vec3b *p;
+            for (int i = 0; i < rows; i++)
+            {
+                p = l_pixel_info.ptr<Vec3b>(i);
+                for (int j = 0; j < cols; j++)
+                {
+                    p[j] = leftImage.ptr<Vec3b>(m_L_point.y())[m_L_point.x()];
+                }
+            }
+        }
 
+        if(leftImage.type() == CV_8UC1){
+            uchar *p;
+            for (int i = 0; i < rows; i++)
+            {
+                p = l_pixel_info.ptr<uchar>(i);
+                for (int j = 0; j < cols; j++)
+                {
+                    p[j] = leftImage.ptr<uchar>(m_L_point.y())[m_L_point.x()];
+                }
+            }
+        }*/
+        qDebug()<< m_L_point;
+
+        //ui->label_Pixel_info_R->setStyleSheet(QStringLiteral("background-color: rgb(255, 0, 0);"));
+        //ui->label_Pixel_info_L->styleSheet().->setPixmap(QPixmap::fromImage(MatToQImage(l_pixel_info)));
+    }
+}
 
 bool MainWindow::event(QEvent * event){
-
     if(event->type() == QEvent::MouseButtonPress )
     {
            QMouseEvent *mouse = dynamic_cast<QMouseEvent* >(event);
 
            //判断鼠标是否是左键按下,且鼠标位置是否在绘画区域
-           if(mouse->button()==Qt::LeftButton && IsInPic(mouse->pos().x(),mouse->pos().y()))
+           if(mouse->button()==Qt::RightButton && IsInPic(mouse->pos().x(),mouse->pos().y()))
            {
                press=true;
                QApplication::setOverrideCursor(Qt::OpenHandCursor); //设置鼠标样式
                MousePosLabel->setText("("+QString::number(mouse->pos().x())+","+QString::number(mouse->pos().y())+")");
                PreDot = mouse->pos();
+           }
+           if(mouse->button()==Qt::LeftButton && IsInPic(mouse->pos().x(),mouse->pos().y()))
+           {
+               QApplication::setOverrideCursor(Qt::CrossCursor); //设置鼠标样式
            }
     }
     else if(event->type() == QEvent::MouseButtonRelease)
@@ -88,7 +134,7 @@ bool MainWindow::event(QEvent * event){
         QMouseEvent *mouse = dynamic_cast<QMouseEvent* >(event);
 
         //判断鼠标是否是左键释放,且之前是在绘画区域
-        if(mouse->button()==Qt::LeftButton && press )
+        if(mouse->button()==Qt::RightButton && press )
         {
             QApplication::setOverrideCursor(Qt::ArrowCursor); //改回鼠标样式
             Winaction.offsetX=Winaction.offsetX+ mouse->x() - PreDot.x();
@@ -96,6 +142,12 @@ bool MainWindow::event(QEvent * event){
             Winaction.action = 1;
             Show_image(&Winaction);
             press=false;
+        }
+        if(mouse->button()==Qt::LeftButton && IsInPic(mouse->pos().x(),mouse->pos().y()))
+        {
+            QApplication::setOverrideCursor(Qt::ArrowCursor); //改回鼠标样式
+            MousePosLabel->setText("("+QString::number(mouse->pos().x())+","+QString::number(mouse->pos().y())+")");
+            Draw_Pixel_Info(mouse->pos());
         }
     }
     return QWidget::event(event);
@@ -219,12 +271,13 @@ void MainWindow::Image_move(Mat *src, Mat *dst){
     Mat temp;
     //缩放
     cv::resize(*src, temp, Size(),Winaction.scaling_factor, Winaction.scaling_factor);
-    //平移
 
+    //平移
     const int rows = ui->label_ProcessedImg->height() ; //输出图像的大小
     const int cols = ui->label_ProcessedImg->width() ;
     int dx = Winaction.offsetX;
     int dy = Winaction.offsetY;
+    dst->release();
     dst->create(rows, cols, temp.type());
   //  qDebug()<<rows<<cols<<temp.type();
     if(temp.type() == CV_8UC3){
@@ -285,12 +338,14 @@ void MainWindow::Show_image(simple_action *action)
         Mat disImageTemp;
         Image_move(&m_srcImage, &disImageTemp);
         ui->label_OriginalImg->setPixmap(QPixmap::fromImage(MatToQImage(disImageTemp)));
+        disImageTemp.release();
     }
     if( isTransform ){
         Mat disImageTemp;
         Image_move(&m_dstImage, &disImageTemp);
         //cv::imshow("dstImage", m_dstImage);
         ui->label_ProcessedImg->setPixmap(QPixmap::fromImage(MatToQImage(disImageTemp)));
+        disImageTemp.release();
     }
     action->action=0;
 }
@@ -298,7 +353,6 @@ void MainWindow::Show_image(simple_action *action)
 //添加图像处理方法
 void MainWindow::on_pushButton_ADD_clicked()
 {
-    QString args;
     if (m_isOpenFile)
     {
         if(ui->SUR_listWidget->currentRow()>=0){
@@ -330,12 +384,14 @@ void MainWindow::on_pushButton_DEL_clicked()
 //修改图像处理方法
 void MainWindow::on_pushButton_MODIFY_clicked()
 {
-    QString args;
-    if(ui->EXE_listWidget->currentRow()>=0){
-        EXE_args_info.replace(ui->EXE_listWidget->currentRow(),SUR_args_info);
-        lib4opencvtool* Method = Lib4opencvtoolManager::create(&SUR_args_info);
-        ui->EXE_listWidget->currentItem()->setText(Method->ReadInfo(SUR_args_info));
-        Lib4opencvtoolManager::destroy(Method);
+    if (m_isOpenFile)
+    {
+        if(ui->EXE_listWidget->currentRow()>=0){
+            EXE_args_info.replace(ui->EXE_listWidget->currentRow(),SUR_args_info);
+            lib4opencvtool* Method = Lib4opencvtoolManager::create(&SUR_args_info);
+            ui->EXE_listWidget->currentItem()->setText(Method->ReadInfo(SUR_args_info));
+            Lib4opencvtoolManager::destroy(Method);
+        }
     }
 }
 
@@ -463,8 +519,9 @@ void MainWindow::Controlinfo(args_info default_info){
         ui->lineEdit_5->setEnabled(true);
     }
 }
+
 //源方法列表选择
-void MainWindow::on_SUR_listWidget_itemDoubleClicked(QListWidgetItem *item)
+void MainWindow::on_SUR_listWidget_itemClicked(QListWidgetItem *item)
 {
     QString currentText = item->text();
     ui->statusBar->showMessage("CUR:" + item->text() + "(default)");
@@ -478,12 +535,19 @@ void MainWindow::on_SUR_listWidget_itemDoubleClicked(QListWidgetItem *item)
 }
 
 //执行列表选择
-void MainWindow::on_EXE_listWidget_itemDoubleClicked(QListWidgetItem *item)
+void MainWindow::on_EXE_listWidget_itemClicked(QListWidgetItem *item)
 {
     ui->statusBar->showMessage("EXE:"+QString::number(ui->EXE_listWidget->currentRow())+" INFO:" + item->text());
-    //SUR_args_info=EXE_args_info.at(ui->EXE_listWidget->currentRow());
+    SUR_args_info=EXE_args_info.at(ui->EXE_listWidget->currentRow());
     Disable_Args_Set();
-    Controlinfo(EXE_args_info.at(ui->EXE_listWidget->currentRow()));
+    Controlinfo(SUR_args_info);
+}
+void MainWindow::on_EXE_listWidget_itemDoubleClicked(QListWidgetItem *item)
+{
+    Winaction.action=1;
+    if(m_isOpenFile && Image_transform(true)>0){
+        imshow("target image", m_dstImage);
+    }
 }
 
 //断点转换
@@ -499,7 +563,6 @@ void MainWindow::on_pushButton_EXE_clicked()
 void MainWindow::on_pushButton_EXED_clicked()
 {
     Winaction={0, 0, 1, 1};
-    qDebug()<<111111111111111;
     if(m_isOpenFile && Image_transform(false)>0)Show_image(&Winaction);
 }
 
@@ -606,3 +669,5 @@ void MainWindow::on_lineEdit_5_textEdited(const QString &arg1)
         SUR_args_info.lineinfo[5].line=arg1;
     }
 }
+
+

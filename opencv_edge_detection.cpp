@@ -31,13 +31,7 @@ opencv_edge_detection::opencv_edge_detection(args_info *_arginfo):arginfo(_argin
 
 opencv_edge_detection::~opencv_edge_detection()
 {
-    for (int i=0;i < BOX_NUM; i++)
-        arginfo->boxinfo[i]=defualt_boxinfo[i];
-    for (int i=0;i < SLIDER_NUM; i++)
-        arginfo->sliderinfo[i]=defualt_slider[i];
-    for (int i=0;i < LINE_NUM; i++)
-        arginfo->lineinfo[i]=defualt_line[i];
-    arginfo->argsuse = 0;
+    memset(arginfo, 0, sizeof(*arginfo));
 }
 
 int16_t opencv_edge_detection::GetArgsUse(){
@@ -60,11 +54,11 @@ void opencv_edge_detection::GetDefualtInfo(args_info *readargsinfo){
 
 QString opencv_edge_detection::ReadInfo(args_info readargsinfo){
     readargsinfo=*arginfo;
-    QString s=Methodname+":"+QString::number(  arginfo->boxinfo[0].num)+" "+ QString::number(  arginfo->sliderinfo[0].value);
+    QString s=Methodname+":"+arginfo->boxinfo[1].s.at(arginfo->boxinfo[1].num)+" "+ QString::number(arginfo->sliderinfo[0].value)+" "+ QString::number(arginfo->sliderinfo[1].value);
     return s;
 }
 
-int opencv_edge_detection::WriteInfo(const args_info writearginfo){
+int opencv_edge_detection::WriteInfo(args_info writearginfo){
     for (int i=0;i < BOX_NUM; i++)
           arginfo->boxinfo[i].num=writearginfo.boxinfo[i].num;
     for (int i=0;i < SLIDER_NUM; i++)
@@ -78,7 +72,7 @@ bool opencv_edge_detection::MatTransform(Mat *srcMat,  Mat *dstMat){
     int typeSel = arginfo->boxinfo[1].num;
     int f_KernelValue = arginfo->sliderinfo[0].value;
     int e_KernelValue = arginfo->sliderinfo[1].value;
-    Mat DstPic, grayImage;
+    Mat DstPic, grayImage, filterImage;
     Mat grad_x, grad_y;
     Mat abs_grad_x, abs_grad_y;
     Mat gray, abs_dst;
@@ -89,15 +83,14 @@ bool opencv_edge_detection::MatTransform(Mat *srcMat,  Mat *dstMat){
 
         //创建与src同类型和同大小的矩阵
         DstPic.create(srcMat->size(), srcMat->type());
-
         //将原始图转化为灰度图
         cvtColor(*srcMat, grayImage, COLOR_BGR2GRAY);
 
         //先使用3*3内核来降噪
-        blur(grayImage, *dstMat, Size(f_KernelValue, f_KernelValue));
+        blur(grayImage, filterImage, Size(f_KernelValue, f_KernelValue));
 
         //运行canny算子
-        Canny(*dstMat, *dstMat, e_KernelValue, e_KernelValue*e_KernelValue, e_KernelValue);
+        Canny(filterImage, *dstMat, e_KernelValue, e_KernelValue*e_KernelValue, e_KernelValue);
         break;
     case 1://sobel
 
