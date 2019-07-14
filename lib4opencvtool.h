@@ -2,6 +2,7 @@
 #define LIB4OPENCVTOOL_H
 #include <QStringList>
 #include "opencv2/opencv.hpp"
+#include <opencv2/imgproc/types_c.h>
 using namespace cv;
 
 #define BOX_NUM     3
