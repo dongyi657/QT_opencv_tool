@@ -3,19 +3,19 @@
 
 #define EDGE_DET_ARGSUSE 0x580
 static QStringList edge_detect_boxs1;
-static box_info defualt_boxinfo[BOX_NUM]={
+static box_info edg_defualt_boxinfo[BOX_NUM]={
     {},
     {0, edge_detect_boxs1<<"canny" << "sobel" << "laplacian"},
     {}
 };
 
-static slider_info defualt_slider[SLIDER_NUM]={
+static slider_info edg_defualt_slider[SLIDER_NUM]={
     {"filter size", 1, 9, 1, 15, 3},
     {"edge size", 1, 9, 1, 15, 3},
     {}
 };
 
-static line_info defualt_line[LINE_NUM]={
+static line_info edg_defualt_line[LINE_NUM]={
     {},
     {},
     {},
@@ -44,11 +44,11 @@ QString opencv_edge_detection::Getmethod(){
 
 void opencv_edge_detection::GetDefualtInfo(args_info *readargsinfo){
     for (int i=0;i < BOX_NUM; i++)
-        readargsinfo->boxinfo[i]=defualt_boxinfo[i];
+        readargsinfo->boxinfo[i]=edg_defualt_boxinfo[i];
     for (int i=0;i < SLIDER_NUM; i++)
-        readargsinfo->sliderinfo[i]=defualt_slider[i];
+        readargsinfo->sliderinfo[i]=edg_defualt_slider[i];
     for (int i=0;i < LINE_NUM; i++)
-        readargsinfo->lineinfo[i]=defualt_line[i];
+        readargsinfo->lineinfo[i]=edg_defualt_line[i];
     readargsinfo->argsuse = arginfo->argsuse;
 }
 

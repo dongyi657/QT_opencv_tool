@@ -5,7 +5,6 @@
 #include "QDebug"
 #include<opencv2\opencv.hpp>
 #include<opencv2\highgui\highgui.hpp>
-
 #ifdef LIB4OPENCVTOOLMANAGER_H
 extern QStringList includeMethods();
 extern lib4opencvtool* chooseMethods(args_info *_arginfo);
