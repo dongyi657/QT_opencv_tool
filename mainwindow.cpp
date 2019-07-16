@@ -83,10 +83,10 @@ void MainWindow::QImage_fill_info(QImage *src, QImage *dst, QPoint I_abs_point){
     QRgb * line = (QRgb *)src->scanLine(I_abs_point.y());
     for(int y = 0; y<   dst->height() ; y++){
         for(int x = 0; x< dst->width(); x++){
-            dst->setPixel(x,y, qRgb(qRed(line[I_abs_point.x()]), qGreen(line[I_abs_point.x()]), qRed(line[I_abs_point.x()])));
+            dst->setPixel(x,y, qRgb(qRed(line[I_abs_point.x()]), qGreen(line[I_abs_point.x()]), qBlue(line[I_abs_point.x()])));
         }
     }
-    qDebug()<<I_abs_point<<qRed(line[I_abs_point.x()])<< qGreen(line[I_abs_point.x()])<< qRed(line[I_abs_point.x()]);
+    //qDebug()<<I_abs_point<<qRed(line[I_abs_point.x()])<< qGreen(line[I_abs_point.x()])<< qBlue(line[I_abs_point.x()]);
 }
 
 void MainWindow::Draw_Pixel_Info(QPoint m_point){
