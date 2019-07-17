@@ -242,7 +242,7 @@ void MainWindow::on_pushButton_SAVE_clicked()
 {
     if(m_isOpenFile){
         QString filename = QFileDialog::getSaveFileName(this,tr("Save Image"),"",tr("Image File(*.png *.jpg *.jpeg *.bmp)")); //选择路径
-        cvtColor(m_dstImage, m_dstImage, COLOR_RGB2BGR);//图像格式转换
+        //cvtColor(m_dstImage, m_dstImage, COLOR_RGB2BGR);//图像格式转换
         if (filename.isEmpty())
         {
             return;
