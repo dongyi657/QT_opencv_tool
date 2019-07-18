@@ -104,23 +104,23 @@ bool opencv_draw::MatTransform(Mat *srcMat,  Mat *dstMat){
     qDebug()<<"绘图:"<<"形状"<<arginfo->boxinfo[0].s.at(typeSel)<<"SH"<<arginfo->boxinfo[1].s.at(SolidorHollow)<<":线粗"<<line_width;
     switch (typeSel) {
         case 0://line
-            cv::line(DstPic, p1, p2, color, line_width);
+            line(DstPic, p1, p2, color, line_width);
             break;
         case 1://rectangle
             if (SolidorHollow==0)line_width=-1;             //负数实心
-            cv::rectangle(DstPic, p1, p2, color, line_width);
+            rectangle(DstPic, p1, p2, color, line_width);
             break;
         case 2://circle
             if (SolidorHollow==0)line_width=-1;             //负数实心
-            cv::circle(DstPic, p1, radius, color, line_width);
+            circle(DstPic, p1, radius, color, line_width);
             break;
         case 3://ellipse
             if (SolidorHollow==0)line_width=-1;             //负数实心
             if ( p2.x!=0 && p2.y!=0 ){
-                cv::ellipse(DstPic, p1, p2, 0, 0, 360, color, line_width); //绘画图像，椭圆中心，主轴半径，旋转角度，起始角度，结束角度（360度一圈为单位）
+                ellipse(DstPic, p1, p2, 0, 0, 360, color, line_width); //绘画图像，椭圆中心，主轴半径，旋转角度，起始角度，结束角度（360度一圈为单位）
             }
             else{
-                cv::ellipse(DstPic, p1, cv::Size(100, 50), 0, 0, 360, color, line_width);
+                ellipse(DstPic, p1, cv::Size(100, 50), 0, 0, 360, color, line_width);HoughLinesP;
             }
             break;
         case 4:         //polylines
@@ -155,11 +155,11 @@ bool opencv_draw::MatTransform(Mat *srcMat,  Mat *dstMat){
             vList.push_back(p3);// 点2
             vList.push_back(p4); // 点3
             if (SolidorHollow==0)line_width=-1;
-            cv::polylines(DstPic, vList, true, color, line_width);
+            polylines(DstPic, vList, true, color, line_width);
             break;
         case 5:         //puttext
         if (SolidorHollow==0)line_width=-1;
-            cv::putText(DstPic, str, p1, font, 4, color, line_width);
+            putText(DstPic, str, p1, font, 4, color, line_width);
             break;
         default:
             break;

@@ -73,3 +73,57 @@ QImage MatToQImage(const cv::Mat& mat)
         return QImage();
     }
 }
+
+
+//QImage->IplImage *
+static IplImage *ConvertToIplImage(const QImage &img)
+{
+    int nChannel=0;
+    if(img.format()==QImage::Format_RGB888)nChannel=3;
+    if(img.format()==QImage::Format_ARGB32)nChannel=4;
+    if( nChannel==0 )return NULL;
+
+    IplImage *iplImg=cvCreateImageHeader( cvSize(img.width(), img.height()),8,nChannel );
+    iplImg->imageData=(char*)img.bits();
+
+    if(nChannel==3)
+        cvConvertImage(iplImg,iplImg,CV_CVTIMG_SWAP_RB);
+
+    return iplImg;
+}
+
+//Mat->QImage
+static QImage ConvertToQImage(cv::Mat &mat)
+{
+    QImage img;
+    int nChannel=mat.channels();
+    if(nChannel==3)
+    {
+        cv::cvtColor(mat,mat,CV_BGR2RGB);
+        img = QImage((const unsigned char*)mat.data,mat.cols,mat.rows,QImage::Format_RGB888);
+    }
+    else if(nChannel==4||nChannel==1)
+    {
+        img = QImage((const unsigned char*)mat.data,mat.cols,mat.rows,QImage::Format_ARGB32);
+    }
+
+    return img;
+}
+
+//IplImage *->QImage
+static QImage ConvertToQImage(IplImage *iplImg)
+{
+    QImage img;
+    int nChannel=iplImg->nChannels;
+    if(nChannel==3)
+    {
+        cvConvertImage(iplImg,iplImg,CV_CVTIMG_SWAP_RB);
+        img = QImage((const unsigned char*)iplImg->imageData,iplImg->width,iplImg->height,QImage::Format_RGB888);
+    }
+    else if(nChannel==4||nChannel==1)
+    {
+        img = QImage((const unsigned char*)iplImg->imageData,iplImg->width,iplImg->height,QImage::Format_ARGB32);
+    }
+
+    return img;
+}
