@@ -120,7 +120,7 @@ bool opencv_draw::MatTransform(Mat *srcMat,  Mat *dstMat){
                 ellipse(DstPic, p1, p2, 0, 0, 360, color, line_width); //绘画图像，椭圆中心，主轴半径，旋转角度，起始角度，结束角度（360度一圈为单位）
             }
             else{
-                ellipse(DstPic, p1, cv::Size(100, 50), 0, 0, 360, color, line_width);HoughLinesP;
+                ellipse(DstPic, p1, cv::Size(100, 50), 0, 0, 360, color, line_width);
             }
             break;
         case 4:         //polylines
