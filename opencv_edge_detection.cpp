@@ -10,7 +10,7 @@ static box_info edg_defualt_boxinfo[BOX_NUM]={
 };
 
 static slider_info edg_defualt_slider[SLIDER_NUM]={
-    {"filter size", 1, 9, 1, 15, 3},
+    {"fK(2n+1)", 0, 4, 1, 1, 1},
     {"edge size", 1, 9, 1, 15, 3},
     {}
 };
@@ -54,7 +54,7 @@ void opencv_edge_detection::GetDefualtInfo(args_info *readargsinfo){
 
 QString opencv_edge_detection::ReadInfo(args_info readargsinfo){
     readargsinfo=*arginfo;
-    QString s=Methodname+":"+arginfo->boxinfo[1].s.at(arginfo->boxinfo[1].num)+" "+ QString::number(arginfo->sliderinfo[0].value)+" "+ QString::number(arginfo->sliderinfo[1].value);
+    QString s=Methodname+":"+arginfo->boxinfo[1].s.at(arginfo->boxinfo[1].num)+" "+ QString::number(arginfo->sliderinfo[0].value*2+1)+" "+ QString::number(arginfo->sliderinfo[1].value);
     return s;
 }
 
@@ -70,7 +70,7 @@ int opencv_edge_detection::WriteInfo(args_info writearginfo){
 
 bool opencv_edge_detection::MatTransform(Mat *srcMat,  Mat *dstMat){
     int typeSel = arginfo->boxinfo[1].num;
-    int f_KernelValue = arginfo->sliderinfo[0].value;
+    int f_KernelValue = arginfo->sliderinfo[0].value*2+1;
     int e_KernelValue = arginfo->sliderinfo[1].value;
     Mat DstPic, grayImage, filterImage;
     Mat grad_x, grad_y;

@@ -80,6 +80,17 @@ Point opencv_draw::QSting2Point(QString str){
     return p;
 }
 
+Scalar opencv_draw::QSting2Scalar(QString str){
+
+    Scalar color=Scalar(0, 0, 0);//black
+    QStringList clorstr=str.split(",");
+    //background_color = QColor();
+    if (clorstr.count()==3){
+        color = Scalar(clorstr[2].toInt(), clorstr[1].toInt(), clorstr[0].toInt());
+    }
+    return color;
+}
+
 bool opencv_draw::MatTransform(Mat *srcMat,  Mat *dstMat){
     int typeSel = arginfo->boxinfo[0].num;
     int SolidorHollow = arginfo->boxinfo[1].num;
@@ -90,12 +101,7 @@ bool opencv_draw::MatTransform(Mat *srcMat,  Mat *dstMat){
     Point p3=QSting2Point(arginfo->lineinfo[2].line);
     Point p4=QSting2Point(arginfo->lineinfo[3].line);
     std::string str = arginfo->lineinfo[5].line.toStdString();
-    QStringList clorstr=arginfo->lineinfo[4].line.split(",");
-    Scalar color=Scalar(0, 0, 0);
-    //background_color = QColor();
-    if (clorstr.count()==3){
-        color = Scalar(clorstr[2].toInt(), clorstr[1].toInt(), clorstr[0].toInt());
-    }
+    Scalar color= QSting2Scalar(arginfo->lineinfo[4].line);
     Mat DstPic;
     std::vector<cv::Point> vList;
     int font = cv::FONT_HERSHEY_SIMPLEX;

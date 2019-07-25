@@ -10,7 +10,7 @@ static box_info fil_defualt_boxinfo[BOX_NUM]={
 };
 
 static slider_info fil_defualt_slider[SLIDER_NUM]={
-    {"kernel size", 1, 9, 2, 1, 5},
+    {"K(2n+1)", 0, 4, 1, 1, 1},
     {},
     {}
 };
@@ -54,7 +54,7 @@ void opencv_filter::GetDefualtInfo(args_info *readargsinfo){
 
 QString opencv_filter::ReadInfo(args_info readargsinfo){
     readargsinfo=*arginfo;
-    QString s=Methodname+":"+arginfo->boxinfo[0].s.at(arginfo->boxinfo[0].num)+" "+ QString::number(  arginfo->sliderinfo[0].value);
+    QString s=Methodname+":"+arginfo->boxinfo[0].s.at(arginfo->boxinfo[0].num)+" "+ QString::number(arginfo->sliderinfo[0].value*2+1);
     return s;
 }
 
@@ -71,7 +71,7 @@ int opencv_filter::WriteInfo(args_info writearginfo){
 bool opencv_filter::MatTransform(Mat *srcMat,  Mat *dstMat){
 
     int typeSel = arginfo->boxinfo[0].num;
-    int f_KernelValue = arginfo->sliderinfo[0].value;
+    int f_KernelValue = arginfo->sliderinfo[0].value*2+1;
 
     qDebug()<<"滤波操作:"<<"滤波方法"<<arginfo->boxinfo[0].s.at(typeSel)<<":核大小"<<f_KernelValue;
     switch (typeSel) {
