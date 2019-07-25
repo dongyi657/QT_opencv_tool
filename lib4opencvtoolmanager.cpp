@@ -3,7 +3,7 @@
 #include "opencv_filter.h"
 #include "opencv_edge_detection.h"
 #include "opencv_draw.h"
-
+#include "opencv_hough.h"
 QStringList includeMethods(){
 #ifdef OPENCV_MORPHOLOGY_H
     Digital_Image_Processing_Method<<OPENCV_MORPHOLOGY_METHOD_NAME;
@@ -16,6 +16,9 @@ QStringList includeMethods(){
 #endif
 #ifdef OPENCV_DRAW_H
     Digital_Image_Processing_Method<<OPENCV_DRAW_METHOD_NAME;
+#endif
+#ifdef OPENCV_HOUGH_H
+    Digital_Image_Processing_Method<<OPENCV_HOUGH_METHOD_NAME;
 #endif
     return Digital_Image_Processing_Method;
 }
@@ -43,6 +46,12 @@ lib4opencvtool* Lib4opencvtoolManager::create(args_info *_arginfo)
 #ifdef OPENCV_DRAW_H
     if (_arginfo->method_name==OPENCV_DRAW_METHOD_NAME){
         lib4opencvtool* lib4opencvPtr = new opencv_draw(_arginfo);
+        return lib4opencvPtr;
+    }
+#endif
+#ifdef OPENCV_HOUGH_H
+    if (_arginfo->method_name==OPENCV_HOUGH_METHOD_NAME){
+        lib4opencvtool* lib4opencvPtr = new opencv_hough(_arginfo);
         return lib4opencvPtr;
     }
 #endif

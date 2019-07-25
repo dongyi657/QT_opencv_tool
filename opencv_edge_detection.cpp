@@ -1,7 +1,7 @@
 #include "opencv_edge_detection.h"
 #include <QDebug>
 
-#define EDGE_DET_ARGSUSE 0x580
+#define EDGE_DET_ARGSUSE 0b10110000000
 static QStringList edge_detect_boxs1;
 static box_info edg_defualt_boxinfo[BOX_NUM]={
     {},
