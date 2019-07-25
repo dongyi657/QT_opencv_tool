@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QColorDialog>
 #include "QDebug"
 #include<opencv2\opencv.hpp>
 #include<opencv2\highgui\highgui.hpp>
@@ -146,6 +147,13 @@ void MainWindow::Draw_Pixel_Info(QPoint m_point){
 
 }
 
+void MainWindow::Draw_ROI(QRect ROI){
+    if(m_isOpenFile && !ROI.isNull()){
+        QImage OriginalImg = ui->label_OriginalImg->pixmap()->toImage().copy(ROI);
+        ui->label_ROI_info->setPixmap(QPixmap::fromImage(OriginalImg.scaled(ui->label_ROI_info->width(), ui->label_ROI_info->height(), Qt::KeepAspectRatioByExpanding)));
+    }
+}
+
 bool MainWindow::event(QEvent * event){
     if(event->type() == QEvent::MouseButtonPress )
     {
@@ -163,6 +171,7 @@ bool MainWindow::event(QEvent * event){
            if(mouse->button()==Qt::LeftButton && IsInPic(mouse->pos().x(),mouse->pos().y()))
            {
                QApplication::setOverrideCursor(Qt::CrossCursor); //设置鼠标样式
+               PreDot = mouse->pos();
            }
     }
     else if(event->type() == QEvent::MouseButtonRelease)
@@ -185,6 +194,10 @@ bool MainWindow::event(QEvent * event){
             QPoint left_addr=W2I_abs_point(mouse->pos());
             MousePosLabel->setText("("+QString::number(left_addr.x())+","+QString::number(left_addr.y())+")");
             Draw_Pixel_Info(mouse->pos());
+            //select_ROI.setX(min(PreDot.x(),mouse->pos().x()));
+            //select_ROI.setY(min(PreDot.y(),mouse->pos().y()));
+            select_ROI.setRect(min(PreDot.x(),mouse->pos().x()),min(PreDot.y(),mouse->pos().y()),abs(mouse->pos().x()-PreDot.x()),abs(mouse->pos().y()-PreDot.y()));
+            Draw_ROI(select_ROI);
         }
     }
     return QWidget::event(event);
@@ -708,3 +721,19 @@ void MainWindow::on_lineEdit_5_textEdited(const QString &arg1)
 }
 
 
+
+void MainWindow::on_lineEdit_4_selectionChanged()
+{
+    if (ui->label_4->text()=="color"){
+        QColor color=QColorDialog::getColor(Qt::white, this);
+        //如果颜色无效
+        if(!color.isValid())
+        {
+            return;
+        }
+    //    qDebug()<<color.red()<<color.green()<<color.blue();
+    //    QPalette colorSign;
+    //    colorSign.setColor(QPalette::Background,color);
+        ui->lineEdit_4->setText(QString::number(color.red())+","+QString::number(color.green())+","+QString::number(color.blue()));
+    }
+}

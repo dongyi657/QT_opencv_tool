@@ -1,7 +1,7 @@
 #include "opencv_remap.h"
 #include <QDebug>
 #include <QRgb>
-#define REMAP_ARGSUSE 0b100110111111
+#define REMAP_ARGSUSE 0b100110111010
 
 static QStringList opencv_remap_boxs1;
 //static QStringList opencv_remap_boxs2;
@@ -21,9 +21,9 @@ static line_info rem_defualt_line[LINE_NUM]={
     {"point1", ""},
     {"point2", ""},
     {"point3", ""},
-    {"point4", ""},
+    {},
     {"color", ""},
-    {"text", ""}
+    {}
 };
 
 opencv_remap::opencv_remap(args_info *_arginfo):arginfo(_arginfo)
@@ -98,7 +98,7 @@ bool opencv_remap::MatTransform(Mat *srcMat,  Mat *dstMat){
     Point2f p3=QSting2Point(arginfo->lineinfo[2].line);
     int angle= arginfo->sliderinfo[0].value;//逆时针旋转45度
     double scale= (double)arginfo->sliderinfo[1].value / 10;//缩放比例
-    Scalar color=QSting2Scalar(arginfo->lineinfo[5].line);
+    Scalar color=QSting2Scalar(arginfo->lineinfo[4].line);
 
     qDebug()<<"重映射:"<<"方式"<<arginfo->boxinfo[0].s.at(typeSel) <<angle <<scale;
 

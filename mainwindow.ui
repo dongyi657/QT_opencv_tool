@@ -73,9 +73,23 @@
        </rect>
       </property>
      </widget>
+     <widget class="QLabel" name="label_ROI_info">
+      <property name="geometry">
+       <rect>
+        <x>530</x>
+        <y>10</y>
+        <width>121</width>
+        <height>121</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
      <zorder>graphicsView</zorder>
      <zorder>label_OriginalImg</zorder>
      <zorder>label_ProcessedImg</zorder>
+     <zorder>label_ROI_info</zorder>
     </widget>
     <widget class="QWidget" name="page_2"/>
    </widget>

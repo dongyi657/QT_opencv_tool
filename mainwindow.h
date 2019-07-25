@@ -36,6 +36,7 @@ private:
     bool m_isOpenFile;
     bool isTransform;
     static simple_action Winaction;
+    QRect select_ROI;
     args_info SUR_args_info;
     QList<args_info> EXE_args_info;
 
@@ -57,6 +58,7 @@ public:
     void QImage_fill_info(QImage *src, QImage *dst, QPoint I_abs_point);
     QPoint W2I_abs_point(QPoint m_point);
     void Draw_Pixel_Info(QPoint m_point);
+    void Draw_ROI(QRect ROI);
 private slots:
     void on_pushButton_clicked();
     void on_pushButton_SAVE_clicked();
@@ -83,6 +85,8 @@ private slots:
     void on_SUR_listWidget_itemClicked(QListWidgetItem *item);
     void on_EXE_listWidget_itemClicked(QListWidgetItem *item);
     void on_EXE_listWidget_itemDoubleClicked(QListWidgetItem *item);
+
+    void on_lineEdit_4_selectionChanged();
 
 protected:
     //重定义了QWidget类的鼠标事件方法

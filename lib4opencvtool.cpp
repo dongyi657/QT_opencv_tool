@@ -127,3 +127,17 @@ static QImage ConvertToQImage(IplImage *iplImg)
 
     return img;
 }
+
+//Rect convert to QRect
+static QRect Rect2QRect(Rect rect)
+{
+    QRect qrect(rect.x,rect.y,rect.width-1,rect.height-1);
+    return qrect;
+}
+
+//QRect convert to Rect
+static Rect QRect2Rect(QRect qrect)
+{
+    Rect rect(qrect.x(),qrect.y(),qrect.width()+1,qrect.height()+1);
+    return rect;
+}
