@@ -141,3 +141,22 @@ static Rect QRect2Rect(QRect qrect)
     Rect rect(qrect.x(),qrect.y(),qrect.width()+1,qrect.height()+1);
     return rect;
 }
+
+Point QSting2Point(QString str){
+    QStringList point_str=str.split(",");
+    Point p={0, 0};
+    if (point_str.count()<2) return p;
+    p.x=point_str[0].toInt();
+    p.y=point_str[1].toInt();
+    return p;
+}
+
+Scalar QSting2Scalar(QString str){
+    Scalar color=Scalar(0, 0, 0);//black
+    QStringList clorstr=str.split(",");
+    //background_color = QColor();
+    if (clorstr.count()==3){
+        color = Scalar(clorstr[2].toInt(), clorstr[1].toInt(), clorstr[0].toInt());
+    }
+    return color;
+}

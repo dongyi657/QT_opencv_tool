@@ -194,8 +194,6 @@ bool MainWindow::event(QEvent * event){
             QPoint left_addr=W2I_abs_point(mouse->pos());
             MousePosLabel->setText("("+QString::number(left_addr.x())+","+QString::number(left_addr.y())+")");
             Draw_Pixel_Info(mouse->pos());
-            //select_ROI.setX(min(PreDot.x(),mouse->pos().x()));
-            //select_ROI.setY(min(PreDot.y(),mouse->pos().y()));
             select_ROI.setRect(min(PreDot.x(),mouse->pos().x()),min(PreDot.y(),mouse->pos().y()),abs(mouse->pos().x()-PreDot.x()),abs(mouse->pos().y()-PreDot.y()));
             Draw_ROI(select_ROI);
         }
@@ -700,7 +698,6 @@ void MainWindow::on_lineEdit_3_textEdited(const QString &arg1)
     {
         SUR_args_info.lineinfo[3].line=arg1;
     }
-
 }
 
 void MainWindow::on_lineEdit_4_textEdited(const QString &arg1)
@@ -709,7 +706,6 @@ void MainWindow::on_lineEdit_4_textEdited(const QString &arg1)
     {
         SUR_args_info.lineinfo[4].line=arg1;
     }
-
 }
 
 void MainWindow::on_lineEdit_5_textEdited(const QString &arg1)
@@ -719,8 +715,6 @@ void MainWindow::on_lineEdit_5_textEdited(const QString &arg1)
         SUR_args_info.lineinfo[5].line=arg1;
     }
 }
-
-
 
 void MainWindow::on_lineEdit_4_selectionChanged()
 {

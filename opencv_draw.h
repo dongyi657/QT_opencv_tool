@@ -8,8 +8,6 @@ class opencv_draw:public lib4opencvtool
 {
 private:
      args_info *arginfo;
-     Point QSting2Point(QString str);
-     Scalar QSting2Scalar(QString str);
 public:
     const QString Methodname = OPENCV_DRAW_METHOD_NAME;
     opencv_draw(args_info *_arginfo);

@@ -33,7 +33,8 @@ SOURCES += \
         opencv_edge_detection.cpp \
         opencv_filter.cpp \
         opencv_morphology.cpp \
-        opencv_remap.cpp
+        opencv_remap.cpp \
+        opencv_template_match.cpp
 
 HEADERS += \
         lib4opencvtool.h \
@@ -43,7 +44,8 @@ HEADERS += \
         opencv_edge_detection.h \
         opencv_filter.h \
         opencv_morphology.h \
-        opencv_remap.h
+        opencv_remap.h \
+        opencv_template_match.h
 
 FORMS += \
         mainwindow.ui

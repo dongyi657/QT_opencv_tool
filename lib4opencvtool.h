@@ -59,4 +59,6 @@ public:
     virtual bool MatTransform(Mat *srcMat,  Mat *dstMat)=0;//图片转换
 };
 
+Point QSting2Point(QString str);
+Scalar QSting2Scalar(QString str);
 #endif // LIB4OPENCVTOOL_H

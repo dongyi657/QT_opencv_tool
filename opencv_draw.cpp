@@ -70,27 +70,6 @@ int opencv_draw::WriteInfo(args_info writearginfo){
     return 1;
 }
 
-Point opencv_draw::QSting2Point(QString str){
-    qDebug()<<str;
-    QStringList point_str=str.split(",");
-    Point p={0, 0};
-    if (point_str.count()<2) return p;
-    p.x=point_str[0].toInt();
-    p.y=point_str[1].toInt();
-    return p;
-}
-
-Scalar opencv_draw::QSting2Scalar(QString str){
-
-    Scalar color=Scalar(0, 0, 0);//black
-    QStringList clorstr=str.split(",");
-    //background_color = QColor();
-    if (clorstr.count()==3){
-        color = Scalar(clorstr[2].toInt(), clorstr[1].toInt(), clorstr[0].toInt());
-    }
-    return color;
-}
-
 bool opencv_draw::MatTransform(Mat *srcMat,  Mat *dstMat){
     int typeSel = arginfo->boxinfo[0].num;
     int SolidorHollow = arginfo->boxinfo[1].num;

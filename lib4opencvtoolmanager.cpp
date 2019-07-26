@@ -4,6 +4,7 @@
 #include "opencv_edge_detection.h"
 #include "opencv_draw.h"
 #include "opencv_remap.h"
+#include "opencv_template_match.h"
 
 QStringList includeMethods(){
 #ifdef OPENCV_MORPHOLOGY_H
@@ -20,6 +21,9 @@ QStringList includeMethods(){
 #endif
 #ifdef OPENCV_REMAP_H
     Digital_Image_Processing_Method<<OPENCV_REMAP_METHOD_NAME;
+#endif
+#ifdef OPENCV_REMAP_H
+    Digital_Image_Processing_Method<<OPENCV_TEMPLATE_MATCH_METHOD_NAME;
 #endif
     return Digital_Image_Processing_Method;
 }
@@ -53,6 +57,12 @@ lib4opencvtool* Lib4opencvtoolManager::create(args_info *_arginfo)
 #ifdef OPENCV_REMAP_H
     if (_arginfo->method_name==OPENCV_REMAP_METHOD_NAME){
         lib4opencvtool* lib4opencvPtr = new opencv_remap(_arginfo);
+        return lib4opencvPtr;
+    }
+#endif
+#ifdef OPENCV_TEMPLATE_MATCH_H
+    if (_arginfo->method_name==OPENCV_TEMPLATE_MATCH_METHOD_NAME){
+        lib4opencvtool* lib4opencvPtr = new opencv_template_match(_arginfo);
         return lib4opencvPtr;
     }
 #endif

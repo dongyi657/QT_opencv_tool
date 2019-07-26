@@ -1,12 +1,11 @@
-#include "opencv_remap.h"
+#include "opencv_template_match.h"
 #include <QDebug>
-#include <QRgb>
-#define REMAP_ARGSUSE 0b100110111010
+#define TEMPLATE_MATCH_ARGSUSE 0b100110111010
 
-static QStringList opencv_remap_boxs1;
-//static QStringList opencv_remap_boxs2;
+static QStringList opencv_template_match_boxs1;
+//static QStringList opencv_template_match_boxs2;
 static box_info rem_defualt_boxinfo[BOX_NUM]={
-    {0, opencv_remap_boxs1 << "重映射" << "src定点转三点仿射" << "转dst定点三点仿射" <<"角度比例仿射"},
+    {0, opencv_template_match_boxs1 << "平方差" << "标准平方差" << "相关" <<"标准相关" << "正负相关" <<"标准正负相关"},
     {},
     {}
 };
@@ -26,25 +25,25 @@ static line_info rem_defualt_line[LINE_NUM]={
     {}
 };
 
-opencv_remap::opencv_remap(args_info *_arginfo):arginfo(_arginfo)
+opencv_template_match::opencv_template_match(args_info *_arginfo):arginfo(_arginfo)
 {
-    arginfo->argsuse = REMAP_ARGSUSE;
+    arginfo->argsuse = TEMPLATE_MATCH_ARGSUSE;
 }
 
-opencv_remap::~opencv_remap()
+opencv_template_match::~opencv_template_match()
 {
     memset(arginfo, 0, sizeof(*arginfo));
 }
 
-int16_t opencv_remap::GetArgsUse(){
+int16_t opencv_template_match::GetArgsUse(){
     return arginfo->argsuse;
 }
 
-QString opencv_remap::Getmethod(){
+QString opencv_template_match::Getmethod(){
     return Methodname;
 }
 
-void opencv_remap::GetDefualtInfo(args_info *readargsinfo){
+void opencv_template_match::GetDefualtInfo(args_info *readargsinfo){
     for (int i=0;i < BOX_NUM; i++)
         readargsinfo->boxinfo[i]=rem_defualt_boxinfo[i];
     for (int i=0;i < SLIDER_NUM; i++)
@@ -54,13 +53,13 @@ void opencv_remap::GetDefualtInfo(args_info *readargsinfo){
     readargsinfo->argsuse = arginfo->argsuse;
 }
 
-QString opencv_remap::ReadInfo(args_info readargsinfo){
+QString opencv_template_match::ReadInfo(args_info readargsinfo){
     readargsinfo=*arginfo;
     QString s=Methodname+":"+arginfo->boxinfo[0].s.at(arginfo->boxinfo[0].num);
     return s;
 }
 
-int opencv_remap::WriteInfo(args_info writearginfo){
+int opencv_template_match::WriteInfo(args_info writearginfo){
     for (int i=0;i < BOX_NUM; i++)
           arginfo->boxinfo[i].num=writearginfo.boxinfo[i].num;
     for (int i=0;i < SLIDER_NUM; i++)
@@ -70,7 +69,7 @@ int opencv_remap::WriteInfo(args_info writearginfo){
     return 1;
 }
 
-bool opencv_remap::MatTransform(Mat *srcMat,  Mat *dstMat){
+bool opencv_template_match::MatTransform(Mat *srcMat,  Mat *dstMat){
     int typeSel = arginfo->boxinfo[0].num;
     Point2f p1=QSting2Point(arginfo->lineinfo[0].line);
     Point2f p2=QSting2Point(arginfo->lineinfo[1].line);
@@ -88,20 +87,7 @@ bool opencv_remap::MatTransform(Mat *srcMat,  Mat *dstMat){
     Mat map_x, map_y;
     switch (typeSel) {
         case 0://重映射
-            dstMat->create(srcMat->size(), srcMat->type());//创建和原图一样的效果图
-            map_x.create(srcMat->size(), CV_32FC1);
-            map_y.create(srcMat->size(), CV_32FC1);
-            //遍历每一个像素点，改变map_x & map_y的值,实现翻转180度
-            for (int j = 0; j < srcMat->rows; j++)
-            {
-                for (int i = 0; i < srcMat->cols; i++)
-                {
-                    map_x.at<float>(j, i) = static_cast<float>(i);
-                    map_y.at<float>(j, i) = static_cast<float>(srcMat->rows - j);
-                }
-            }
-            //进行重映射操作
-            remap(*srcMat, *dstMat, map_x, map_y, INTER_LINEAR, BORDER_CONSTANT, color);
+            matchTemplate()
             break;
         case 1://第一种仿射变换  原图三定点转目标图参数点
             //第一种仿射变换的调用方式：三点法
