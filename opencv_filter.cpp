@@ -1,7 +1,7 @@
 #include "opencv_filter.h"
 #include <QDebug>
 
-#define FILTER_ARGSUSE 0x900
+#define FILTER_ARGSUSE 0b100100000000
 static QStringList filter_boxs1;
 static box_info fil_defualt_boxinfo[BOX_NUM]={
     {0, filter_boxs1<<"方框滤波" << "均值滤波" << "高斯滤波" << "中值滤波" << "双边滤波"},

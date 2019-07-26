@@ -1,7 +1,7 @@
 #include "opencv_morphology.h"
 #include <QDebug>
 
-#define MORPHOLOGY_ARGSUSE 0x900
+#define MORPHOLOGY_ARGSUSE 0b100100000000
 static QStringList morphology_boxs1;
 static box_info mor_defualt_boxinfo[BOX_NUM]={
     {1,morphology_boxs1<<"膨胀" << "腐蚀" << "开运算" << "闭运算" << "形态学梯度" << "顶帽" << "黑帽"},
