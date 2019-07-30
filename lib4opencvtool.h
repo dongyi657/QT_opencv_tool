@@ -1,6 +1,7 @@
 #ifndef LIB4OPENCVTOOL_H
 #define LIB4OPENCVTOOL_H
 #include <QStringList>
+#include <QImage>
 #include "opencv2/opencv.hpp"
 #include <opencv2/imgproc/types_c.h>
 using namespace cv;
@@ -45,12 +46,6 @@ class lib4opencvtool
 public:
     lib4opencvtool();
    // args_info arginfo;
-    int Controlcnt(int num){
-        int i=0;
-        for(int j=num;j==0;j=j>>1)
-            if(j&1)i++;
-        return i;
-    }
     virtual int16_t GetArgsUse()=0;//参数设置表格使能
     virtual QString Getmethod()=0;//获取默认参数
     virtual void GetDefualtInfo( args_info *readargsinfo)=0;//获取默认参数
@@ -59,6 +54,16 @@ public:
     virtual bool MatTransform(Mat *srcMat,  Mat *dstMat)=0;//图片转换
 };
 
+QImage MatToQImage(const cv::Mat& mat);
+cv::Mat QImageToMat(QImage image);
+IplImage *ConvertToIplImage(const QImage &img);
+QImage ConvertToQImage(cv::Mat &mat);
+QImage ConvertToQImage(IplImage *iplImg);
+
+QRect Rect2QRect(Rect rect);
+Rect QRect2Rect(QRect qrect);
+QString GetMatinfo(Mat srcMat);
+QString GetImageinfo(QImage image);
 Point QSting2Point(QString str);
 Scalar QSting2Scalar(QString str);
 #endif // LIB4OPENCVTOOL_H

@@ -1,6 +1,5 @@
 #include "lib4opencvtool.h"
 //#include <QDebug>
-#include <QImage>
 lib4opencvtool::lib4opencvtool()
 {
 
@@ -76,7 +75,7 @@ QImage MatToQImage(const cv::Mat& mat)
 
 
 //QImage->IplImage *
-static IplImage *ConvertToIplImage(const QImage &img)
+IplImage *ConvertToIplImage(const QImage &img)
 {
     int nChannel=0;
     if(img.format()==QImage::Format_RGB888)nChannel=3;
@@ -93,7 +92,7 @@ static IplImage *ConvertToIplImage(const QImage &img)
 }
 
 //Mat->QImage
-static QImage ConvertToQImage(cv::Mat &mat)
+QImage ConvertToQImage(cv::Mat &mat)
 {
     QImage img;
     int nChannel=mat.channels();
@@ -111,7 +110,7 @@ static QImage ConvertToQImage(cv::Mat &mat)
 }
 
 //IplImage *->QImage
-static QImage ConvertToQImage(IplImage *iplImg)
+QImage ConvertToQImage(IplImage *iplImg)
 {
     QImage img;
     int nChannel=iplImg->nChannels;
@@ -129,17 +128,66 @@ static QImage ConvertToQImage(IplImage *iplImg)
 }
 
 //Rect convert to QRect
-static QRect Rect2QRect(Rect rect)
+QRect Rect2QRect(Rect rect)
 {
     QRect qrect(rect.x,rect.y,rect.width-1,rect.height-1);
     return qrect;
 }
 
 //QRect convert to Rect
-static Rect QRect2Rect(QRect qrect)
+Rect QRect2Rect(QRect qrect)
 {
     Rect rect(qrect.x(),qrect.y(),qrect.width()+1,qrect.height()+1);
     return rect;
+}
+
+QString GetMatinfo(Mat srcMat){
+    QString info,type;
+    if(srcMat.empty())
+        return "E:null info!";
+    info=" w:"+QString::number(srcMat.rows)+" h:"+QString::number(srcMat.cols);
+
+    if(srcMat.type() == CV_8UC1)
+    {
+        type=" Mt:CV_8UC1";
+    }
+    // 8-bits unsigned, NO. OF CHANNELS = 3
+    else if(srcMat.type() == CV_8UC3)
+    {
+        type=" Mt:CV_8UC3";
+    }
+    else if(srcMat.type() == CV_8UC4)
+    {
+        type=" Mt:CV_8UC4";
+    }
+    return info+type+" D:"+QString::number(srcMat.depth())+"    ";
+}
+
+QString GetImageinfo(QImage image){
+    QString info,type;
+    if(image.isNull())
+        return "E:null info!";
+    info=" w:"+QString::number(image.width())+" h:"+QString::number(image.height());
+
+    switch (image.format())
+    {
+    case QImage::Format_ARGB32:
+        type=" It:Format_ARGB32";
+        break;
+    case QImage::Format_RGB32:
+        type=" It:Format_RGB32";
+        break;
+    case QImage::Format_ARGB32_Premultiplied:
+        type=" It:Format_ARGB32_Premultiplied";
+        break;
+    case QImage::Format_RGB888:
+        type=" It:Format_RGB888";
+        break;
+    case QImage::Format_Indexed8:
+        type=" It:Format_Indexed8";
+        break;
+    }
+    return info+type+" D:"+QString::number(image.depth());
 }
 
 Point QSting2Point(QString str){

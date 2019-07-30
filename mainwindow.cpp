@@ -10,8 +10,6 @@
 extern QStringList includeMethods();
 extern lib4opencvtool* chooseMethods(args_info *_arginfo);
 #endif
-extern QImage MatToQImage(const cv::Mat& mat);
-extern cv::Mat QImageToMat(QImage image);
 
 simple_action MainWindow::Winaction={0,0,1,0};
 static bool press=false;
@@ -33,6 +31,10 @@ MainWindow::MainWindow(QWidget *parent) :
 #endif
 
     //鼠标事件
+    L_ImageInfoLabel=new QLabel;
+    L_ImageInfoLabel->setText(tr("原图片信息"));
+    R_ImageInfoLabel=new QLabel;
+    R_ImageInfoLabel->setText(tr("目标图片信息"));
     statusLabel=new QLabel;
     statusLabel->setText(tr("操作状态栏"));
     statusLabel->setFixedWidth(200);
@@ -41,6 +43,8 @@ MainWindow::MainWindow(QWidget *parent) :
     MousePosLabel->setFixedWidth(100);
 
     //在QMainWindow的状态栏中加入控件
+    statusBar()->addPermanentWidget(L_ImageInfoLabel);
+    statusBar()->addPermanentWidget(R_ImageInfoLabel);
     statusBar()->addPermanentWidget(statusLabel);
     statusBar()->addPermanentWidget(MousePosLabel);
     //设置窗体追踪鼠标
@@ -208,10 +212,10 @@ void MainWindow::wheelEvent(QWheelEvent* event)     //鼠标滑轮事件
      if (IsInPic(event->x(), event->y())){
          if (event->delta()>0 ) {      //上滑,缩小
            // event->x(),event->y()
-            statusBar()->showMessage(tr("缩小"));
+            //statusBar()->showMessage(tr("缩小"));
             Winaction.action=2;
          } else {                    //下滑,放大
-            statusBar()->showMessage(tr("放大"));
+            //statusBar()->showMessage(tr("放大"));
             Winaction.action=3;
          }
          double tmp=Winaction.scaling_factor*pow(1.1,(event->delta()/120));
@@ -246,6 +250,8 @@ void MainWindow::on_pushButton_clicked()
     cvtColor(m_srcImage, disImageTemp, COLOR_BGR2RGB);//图像格式转换
     QImage disImage = QImage((const unsigned char*)(disImageTemp.data),disImageTemp.cols,disImageTemp.rows,QImage::Format_RGB888);
     ui->label_OriginalImg->setPixmap(QPixmap::fromImage(disImage.scaled(ui->label_OriginalImg->width(), ui->label_OriginalImg->height(), Qt::KeepAspectRatio)));
+    //leftimageinfo="type:"+m_srcImage.type()+""+m_srcImage.;
+    L_ImageInfoLabel->setText(GetMatinfo(m_srcImage));
 }
 
 //保存
@@ -266,12 +272,13 @@ int MainWindow::Image_transform(bool Viewtransform)
 {
 
     Mat srcImage;
-    m_srcImage.copyTo(srcImage);
-    Mat dstImage;
+    //Mat dstImage=QImageToMat(ui->label_ROI_info->pixmap()->toImage());
+    Mat dstImage=m_srcImage(QRect2Rect(select_ROI));
     int ret;
     int i=0;
     int count;
     isTransform=false;
+    m_srcImage.copyTo(srcImage);
     if  (Viewtransform) {
         count=ui->EXE_listWidget->currentRow()+1;
     } else {
@@ -387,13 +394,16 @@ void MainWindow::Show_image(simple_action *action)
         Image_move(&m_srcImage, &disImageTemp);
         ui->label_OriginalImg->setPixmap(QPixmap::fromImage(MatToQImage(disImageTemp)));
         disImageTemp.release();
+        L_ImageInfoLabel->setText(GetMatinfo(m_srcImage));
     }
     if( isTransform ){
         Mat disImageTemp;
         Image_move(&m_dstImage, &disImageTemp);
         //cv::imshow("dstImage", m_dstImage);
+        ui->label_ProcessedImg->clear();
         ui->label_ProcessedImg->setPixmap(QPixmap::fromImage(MatToQImage(disImageTemp)));
         disImageTemp.release();
+        R_ImageInfoLabel->setText(GetMatinfo(m_dstImage));
     }
     action->action=0;
 }
@@ -721,13 +731,12 @@ void MainWindow::on_lineEdit_4_selectionChanged()
     if (ui->label_4->text()=="color"){
         QColor color=QColorDialog::getColor(Qt::white, this);
         //如果颜色无效
-        if(!color.isValid())
+        if(color.isValid())
         {
-            return;
+            ui->lineEdit_4->setText(QString::number(color.red())+","+QString::number(color.green())+","+QString::number(color.blue()));
         }
     //    qDebug()<<color.red()<<color.green()<<color.blue();
     //    QPalette colorSign;
     //    colorSign.setColor(QPalette::Background,color);
-        ui->lineEdit_4->setText(QString::number(color.red())+","+QString::number(color.green())+","+QString::number(color.blue()));
     }
 }

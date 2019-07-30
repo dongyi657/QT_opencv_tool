@@ -41,6 +41,7 @@ private:
     QList<args_info> EXE_args_info;
 
     Mat m_srcImage;
+    Mat match_Image;
     Mat m_dstImage;
 
 public:
@@ -95,6 +96,8 @@ protected:
 private:
     QLabel *statusLabel;
     QLabel *MousePosLabel;
+    QLabel *L_ImageInfoLabel;
+    QLabel *R_ImageInfoLabel;
 
 };
 

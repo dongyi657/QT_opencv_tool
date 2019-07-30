@@ -32,6 +32,7 @@ SOURCES += \
         opencv_draw.cpp \
         opencv_edge_detection.cpp \
         opencv_filter.cpp \
+        opencv_hough.cpp \
         opencv_morphology.cpp \
         opencv_remap.cpp \
         opencv_template_match.cpp
@@ -43,6 +44,7 @@ HEADERS += \
         opencv_draw.h \
         opencv_edge_detection.h \
         opencv_filter.h \
+        opencv_hough.h \
         opencv_morphology.h \
         opencv_remap.h \
         opencv_template_match.h

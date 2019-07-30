@@ -70,26 +70,12 @@ int opencv_hough::WriteInfo(args_info writearginfo){
     return 1;
 }
 
-Point opencv_hough::QSting2Point(QString str){
-    qDebug()<<str;
-    QStringList point_str=str.split(",");
-    Point p={0, 0};
-    if (point_str.count()<2) return p;
-    p.x=point_str[0].toInt();
-    p.y=point_str[1].toInt();
-    return p;
-}
 
 bool opencv_hough::MatTransform(Mat *srcMat,  Mat *dstMat){
     int typeSel = arginfo->boxinfo[0].num;
     int line_width = arginfo->sliderinfo[0].value;
     int Precision= arginfo->sliderinfo[1].value;
-    QStringList clorstr=arginfo->lineinfo[4].line.split(",");
-    Scalar color=Scalar(0, 0, 0);
-    //background_color = QColor();
-    if (clorstr.count()==3){
-        color = Scalar(clorstr[2].toInt(), clorstr[1].toInt(), clorstr[0].toInt());
-    }
+    Scalar color=QSting2Scalar(arginfo->lineinfo[4].line);
 
     Mat midImage;
     // 定义矢量结构存放检测出来的直线
