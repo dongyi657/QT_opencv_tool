@@ -89,6 +89,8 @@ private slots:
 
     void on_lineEdit_4_selectionChanged();
 
+    void on_lineEdit_5_returnPressed();
+
 protected:
     //重定义了QWidget类的鼠标事件方法
     bool event(QEvent * event);

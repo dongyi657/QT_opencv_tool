@@ -3,6 +3,10 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QColorDialog>
+//截屏
+//#include <QScreen>
+//#include <QGuiApplication>
+//截屏
 #include "QDebug"
 #include<opencv2\opencv.hpp>
 #include<opencv2\highgui\highgui.hpp>
@@ -29,7 +33,10 @@ MainWindow::MainWindow(QWidget *parent) :
 #ifdef LIB4OPENCVTOOLMANAGER_H
     ui->SUR_listWidget->addItems(includeMethods());
 #endif
-
+//截屏
+//    QScreen *screen = QGuiApplication::primaryScreen();
+//    screen->grabWindow(0).save("D:/workcache/OpenCV/PROJECT/INSTALL_TEST/template_match_cmd/full.jpg", "jpg");
+//截屏
     //鼠标事件
     L_ImageInfoLabel=new QLabel;
     L_ImageInfoLabel->setText(tr("原图片信息"));
@@ -52,6 +59,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
     ui->graphicsView->setVisible(false);
+    Disable_Args_Set();
 }
 
 MainWindow::~MainWindow()
@@ -174,6 +182,10 @@ bool MainWindow::event(QEvent * event){
            }
            if(mouse->button()==Qt::LeftButton && IsInPic(mouse->pos().x(),mouse->pos().y()))
            {
+               if(!m_isOpenFile && ui->label_OriginalImg->geometry().contains(mouse->pos())){
+                   on_pushButton_clicked();
+               }
+
                QApplication::setOverrideCursor(Qt::CrossCursor); //设置鼠标样式
                PreDot = mouse->pos();
            }
@@ -273,7 +285,8 @@ int MainWindow::Image_transform(bool Viewtransform)
 
     Mat srcImage;
     //Mat dstImage=QImageToMat(ui->label_ROI_info->pixmap()->toImage());
-    Mat dstImage=m_srcImage(QRect2Rect(select_ROI));
+    //Mat dstImage=imread("C:/Users/H237428/Pictures/temp2.JPG");
+    Mat dstImage= m_srcImage(QRect2Rect(select_ROI));
     int ret;
     int i=0;
     int count;
@@ -581,6 +594,10 @@ void MainWindow::Controlinfo(args_info default_info){
 //源方法列表选择
 void MainWindow::on_SUR_listWidget_itemClicked(QListWidgetItem *item)
 {
+    if(!m_isOpenFile){
+        ui->statusBar->showMessage("CUR:请先打开图片！");
+        return ;
+    }
     QString currentText = item->text();
     ui->statusBar->showMessage("CUR:" + item->text() + "(default)");
     SUR_args_info.method_name=currentText;
@@ -734,9 +751,31 @@ void MainWindow::on_lineEdit_4_selectionChanged()
         if(color.isValid())
         {
             ui->lineEdit_4->setText(QString::number(color.red())+","+QString::number(color.green())+","+QString::number(color.blue()));
+            SUR_args_info.lineinfo[4].line=ui->lineEdit_4->text();
         }
     //    qDebug()<<color.red()<<color.green()<<color.blue();
     //    QPalette colorSign;
     //    colorSign.setColor(QPalette::Background,color);
     }
+}
+
+void MainWindow::on_lineEdit_5_returnPressed()
+{
+    QString fileName = QFileDialog::getOpenFileName(this,tr("Open Image"),".",tr("Image File(*.png *.jpg *.jpeg *.bmp)"));
+    if (fileName.isEmpty())
+    {
+        return;
+    }
+
+    match_Image = imread(fileName.toLatin1().data());//读取图片数据
+    if (!m_srcImage.data)
+    {
+        QMessageBox box(QMessageBox::Critical, "打开图像", "读取图像文件失败！请重新打开．");
+        box.setStandardButtons(QMessageBox::Ok);
+        box.setButtonText(QMessageBox::Ok, QString("确定"));
+        box.exec();
+        return;
+    }
+    ui->lineEdit_5->setText(fileName);
+    SUR_args_info.lineinfo[5].line=ui->lineEdit_5->text();
 }
