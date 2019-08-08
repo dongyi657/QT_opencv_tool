@@ -1,23 +1,23 @@
 #include "opencv_hough.h"
 #include <QDebug>
 #include <QVector>
-#define HOUGH_ARGSUSE 0b100110000010
+#define opencv_hough_ARGSUSE 0b100110000010
 
 static QStringList opencv_hough_boxs1;
 //static QStringList opencv_hough_boxs2;
-static box_info hou_defualt_boxinfo[BOX_NUM]={
+static box_info opencv_hough_defualt_boxinfo[BOX_NUM]={
     {0, opencv_hough_boxs1 << "line1" << "line2"<< "circle"},
     {},
     {}
 };
 
-static slider_info hou_defualt_slider[SLIDER_NUM]={
+static slider_info opencv_hough_defualt_slider[SLIDER_NUM]={
     {"line width", 1, 9, 1, 0, 3},
     {"Precision", 1,201,10,1,10},
     {}
 };
 
-static line_info hou_defualt_line[LINE_NUM]={
+static line_info opencv_hough_defualt_line[LINE_NUM]={
     {},
     {},
     {},
@@ -28,7 +28,7 @@ static line_info hou_defualt_line[LINE_NUM]={
 
 opencv_hough::opencv_hough(args_info *_arginfo):arginfo(_arginfo)
 {
-    arginfo->argsuse = HOUGH_ARGSUSE;
+    arginfo->argsuse = opencv_hough_ARGSUSE;
 }
 
 opencv_hough::~opencv_hough()
@@ -46,11 +46,11 @@ QString opencv_hough::Getmethod(){
 
 void opencv_hough::GetDefualtInfo(args_info *readargsinfo){
     for (int i=0;i < BOX_NUM; i++)
-        readargsinfo->boxinfo[i]=hou_defualt_boxinfo[i];
+        readargsinfo->boxinfo[i]=opencv_hough_defualt_boxinfo[i];
     for (int i=0;i < SLIDER_NUM; i++)
-        readargsinfo->sliderinfo[i]=hou_defualt_slider[i];
+        readargsinfo->sliderinfo[i]=opencv_hough_defualt_slider[i];
     for (int i=0;i < LINE_NUM; i++)
-        readargsinfo->lineinfo[i]=hou_defualt_line[i];
+        readargsinfo->lineinfo[i]=opencv_hough_defualt_line[i];
     readargsinfo->argsuse = arginfo->argsuse;
 }
 

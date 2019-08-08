@@ -1,12 +1,19 @@
 #include "opencv_template_match.h"
+//截屏
+#include <QScreen>
+#include <QGuiApplication>
+#include <QMainWindow>
+//截屏
 #include <QDebug>
-#define TEMPLATE_MATCH_ARGSUSE 0b100111000011
+
+#define TEMPLATE_MATCH_ARGSUSE 0b110111000011
 #define MAX_MATCH_NUM 20
 static QStringList opencv_template_match_boxs1;
+static QStringList opencv_template_match_boxs2;
 //static QStringList opencv_template_match_boxs2;
 static box_info match_defualt_boxinfo[BOX_NUM]={
     {0, opencv_template_match_boxs1 << "平方差" << "标准平方差" << "相关" <<"标准相关" << "正负相关" <<"标准正负相关"},
-    {},
+    {0, opencv_template_match_boxs2 << "打开图像中查找" << "屏幕查找" },
     {}
 };
 
@@ -78,11 +85,25 @@ bool opencv_template_match::MatTransform(Mat *srcMat,  Mat *dstMat){
     int Precision= arginfo->sliderinfo[1].value;
     int MatchN= arginfo->sliderinfo[2].value;
     Scalar color=QSting2Scalar(arginfo->lineinfo[4].line);
-
     Mat match_image = imread(arginfo->lineinfo[5].line.toLatin1().data());
-
     if (!match_image.data){
         return false;
+    }
+    if(arginfo->boxinfo[0].num==1){
+        //截屏
+        //问题 Question Problem
+        //放在mainwindow.cpp可以截屏，这里不可以，待解！！！！！！！！！！！！！！！！
+        //
+        Mat pm;
+        QScreen *screen = QGuiApplication::primaryScreen();
+        pm = QImageToMat(screen->grabWindow(0).toImage());
+        if (!srcMat->data){
+            qDebug() << "屏幕未捕获";
+        }else {
+            *srcMat = pm;
+        }
+        imshow("screen", *srcMat);
+        //截屏
     }
     qDebug()<<"图像匹配:"<<"方式"<<arginfo->boxinfo[0].s.at(typeSel)<<":精度"<<Precision<<":线粗"<<line_width<<":num"<<MatchN;
     Mat  templ=match_image, result;

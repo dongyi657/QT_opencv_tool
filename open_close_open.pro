@@ -35,6 +35,7 @@ SOURCES += \
         opencv_hough.cpp \
         opencv_morphology.cpp \
         opencv_remap.cpp \
+        opencv_roi_processing.cpp \
         opencv_template_match.cpp
 
 HEADERS += \
@@ -47,6 +48,7 @@ HEADERS += \
         opencv_hough.h \
         opencv_morphology.h \
         opencv_remap.h \
+        opencv_roi_processing.h \
         opencv_template_match.h
 
 FORMS += \

@@ -8,7 +8,6 @@
 //#include <QGuiApplication>
 //截屏
 #include "QDebug"
-#include<opencv2\opencv.hpp>
 #include<opencv2\highgui\highgui.hpp>
 #ifdef LIB4OPENCVTOOLMANAGER_H
 extern QStringList includeMethods();
@@ -82,12 +81,12 @@ bool MainWindow::IsInPic(int x, int y){
 QPoint MainWindow::W2I_abs_point(QPoint m_point){
     QPoint I_abs_point;
     if(ui->label_OriginalImg->geometry().contains(m_point)){
-        I_abs_point.setX(m_point.x()-ui->label_OriginalImg->geometry().left());
-        I_abs_point.setY(m_point.y()-ui->label_OriginalImg->geometry().top());
+        I_abs_point.setX(m_point.x()-ui->label_OriginalImg->geometry().topLeft().x());
+        I_abs_point.setY(m_point.y()-ui->label_OriginalImg->geometry().topLeft().y());
     }
     if (ui->label_ProcessedImg->geometry().contains(m_point)){
-        I_abs_point.setX(m_point.x()-ui->label_ProcessedImg->geometry().left());
-        I_abs_point.setY(m_point.y()-ui->label_ProcessedImg->geometry().top());
+        I_abs_point.setX(m_point.x()-ui->label_ProcessedImg->geometry().topLeft().x());
+        I_abs_point.setY(m_point.y()-ui->label_ProcessedImg->geometry().topLeft().y());
     }
     return I_abs_point;
 }
@@ -778,4 +777,78 @@ void MainWindow::on_lineEdit_5_returnPressed()
     }
     ui->lineEdit_5->setText(fileName);
     SUR_args_info.lineinfo[5].line=ui->lineEdit_5->text();
+}
+
+void MainWindow::keyPressEvent(QKeyEvent *ev)
+{
+    QPoint left_addr,pt;
+    if(ev->key() == Qt::Key_F1){
+        pt = QCursor::pos();
+        qDebug()<<pt.x()<<pt.y();
+        if(m_isOpenFile){
+            left_addr=W2I_abs_point(pt);
+        }
+        qDebug()<<left_addr.x()<<left_addr.y();
+        ui->lineEdit_0->setText(QString::number(left_addr.x())+","+QString::number(left_addr.y()));
+        SUR_args_info.lineinfo[0].line=ui->lineEdit_0->text();
+    }
+    if(ev->key() == Qt::Key_F2){
+        pt = QCursor::pos();
+        if(m_isOpenFile && ui->label_OriginalImg->geometry().contains(pt)){
+            left_addr=W2I_abs_point(pt);
+        }
+        ui->lineEdit_1->setText(QString::number(left_addr.x())+","+QString::number(left_addr.y()));
+        SUR_args_info.lineinfo[1].line=ui->lineEdit_1->text();
+    }
+    if(ev->key() == Qt::Key_F3){
+        pt = QCursor::pos();
+        if(m_isOpenFile && ui->label_OriginalImg->geometry().contains(pt)){
+            left_addr=W2I_abs_point(pt);
+        }
+        ui->lineEdit_2->setText(QString::number(left_addr.x())+","+QString::number(left_addr.y()));
+        SUR_args_info.lineinfo[2].line=ui->lineEdit_2->text();
+    }
+    if(ev->key() == Qt::Key_F4){
+        pt = QCursor::pos();
+        if(m_isOpenFile && ui->label_OriginalImg->geometry().contains(pt)){
+            left_addr=W2I_abs_point(pt);
+        }
+        ui->lineEdit_3->setText(QString::number(left_addr.x())+","+QString::number(left_addr.y()));
+        SUR_args_info.lineinfo[3].line=ui->lineEdit_3->text();
+    }
+    if(ev->key() == Qt::Key_F5){
+        if (ui->label_4->text()=="color"){
+            QColor color=QColorDialog::getColor(Qt::white, this);
+            //如果颜色无效
+            if(color.isValid())
+            {
+                ui->lineEdit_4->setText(QString::number(color.red())+","+QString::number(color.green())+","+QString::number(color.blue()));
+                SUR_args_info.lineinfo[4].line=ui->lineEdit_4->text();
+            }
+        //    qDebug()<<color.red()<<color.green()<<color.blue();
+        //    QPalette colorSign;
+        //    colorSign.setColor(QPalette::Background,color);
+        }
+    }
+    if(ev->key() == Qt::Key_F6){
+        if (ui->label_4->text()=="file_name"){
+            QString fileName = QFileDialog::getOpenFileName(this,tr("Open Image"),".",tr("Image File(*.png *.jpg *.jpeg *.bmp)"));
+            if (fileName.isEmpty())
+            {
+                return;
+            }
+
+            match_Image = imread(fileName.toLatin1().data());//读取图片数据
+            if (!m_srcImage.data)
+            {
+                QMessageBox box(QMessageBox::Critical, "打开图像", "读取图像文件失败！请重新打开．");
+                box.setStandardButtons(QMessageBox::Ok);
+                box.setButtonText(QMessageBox::Ok, QString("确定"));
+                box.exec();
+                return;
+            }
+            ui->lineEdit_5->setText(fileName);
+            SUR_args_info.lineinfo[5].line=ui->lineEdit_5->text();
+        }
+    }
 }

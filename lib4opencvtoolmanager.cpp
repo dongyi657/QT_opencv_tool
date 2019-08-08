@@ -6,6 +6,7 @@
 #include "opencv_remap.h"
 #include "opencv_template_match.h"
 #include "opencv_hough.h"
+#include "opencv_roi_processing.h"
 
 QStringList includeMethods(){
 #ifdef OPENCV_MORPHOLOGY_H
@@ -28,6 +29,9 @@ QStringList includeMethods(){
 #endif
 #ifdef OPENCV_HOUGH_H
     Digital_Image_Processing_Method<<OPENCV_HOUGH_METHOD_NAME;
+#endif
+#ifdef OPENCV_ROI_PROCESSING_H
+    Digital_Image_Processing_Method<<OPENCV_ROI_PROCESSING_METHOD_NAME;
 #endif
     return Digital_Image_Processing_Method;
 }
@@ -74,6 +78,12 @@ lib4opencvtool* Lib4opencvtoolManager::create(args_info *_arginfo)
 #ifdef OPENCV_HOUGH_H
     if (_arginfo->method_name==OPENCV_HOUGH_METHOD_NAME){
         lib4opencvtool* lib4opencvPtr = new opencv_hough(_arginfo);
+        return lib4opencvPtr;
+    }
+#endif
+#ifdef OPENCV_ROI_PROCESSING_H
+    if (_arginfo->method_name==OPENCV_ROI_PROCESSING_METHOD_NAME){
+        lib4opencvtool* lib4opencvPtr = new opencv_ROI_processing(_arginfo);
         return lib4opencvPtr;
     }
 #endif

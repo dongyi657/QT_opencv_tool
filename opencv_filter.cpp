@@ -1,21 +1,21 @@
 #include "opencv_filter.h"
 #include <QDebug>
 
-#define FILTER_ARGSUSE 0b100100000000
-static QStringList filter_boxs1;
-static box_info fil_defualt_boxinfo[BOX_NUM]={
-    {0, filter_boxs1<<"方框滤波" << "均值滤波" << "高斯滤波" << "中值滤波" << "双边滤波"},
+#define opencv_filter_ARGSUSE 0b100100000000
+static QStringList opencv_filter_boxs1;
+static box_info opencv_filter_defualt_boxinfo[BOX_NUM]={
+    {0, opencv_filter_boxs1<<"方框滤波" << "均值滤波" << "高斯滤波" << "中值滤波" << "双边滤波"},
     {},
     {}
 };
 
-static slider_info fil_defualt_slider[SLIDER_NUM]={
+static slider_info opencv_filter_defualt_slider[SLIDER_NUM]={
     {"K(2n+1)", 0, 4, 1, 1, 1},
     {},
     {}
 };
 
-static line_info fil_defualt_line[LINE_NUM]={
+static line_info opencv_filter_defualt_line[LINE_NUM]={
     {},
     {},
     {},
@@ -26,7 +26,7 @@ static line_info fil_defualt_line[LINE_NUM]={
 
 opencv_filter::opencv_filter(args_info *_arginfo):arginfo(_arginfo)
 {
-    arginfo->argsuse = FILTER_ARGSUSE;
+    arginfo->argsuse = opencv_filter_ARGSUSE;
 }
 
 opencv_filter::~opencv_filter()
@@ -44,11 +44,11 @@ QString opencv_filter::Getmethod(){
 
 void opencv_filter::GetDefualtInfo(args_info *readargsinfo){
     for (int i=0;i < BOX_NUM; i++)
-        readargsinfo->boxinfo[i]=fil_defualt_boxinfo[i];
+        readargsinfo->boxinfo[i]=opencv_filter_defualt_boxinfo[i];
     for (int i=0;i < SLIDER_NUM; i++)
-        readargsinfo->sliderinfo[i]=fil_defualt_slider[i];
+        readargsinfo->sliderinfo[i]=opencv_filter_defualt_slider[i];
     for (int i=0;i < LINE_NUM; i++)
-        readargsinfo->lineinfo[i]=fil_defualt_line[i];
+        readargsinfo->lineinfo[i]=opencv_filter_defualt_line[i];
     readargsinfo->argsuse = arginfo->argsuse;
 }
 

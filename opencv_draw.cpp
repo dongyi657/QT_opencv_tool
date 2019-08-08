@@ -1,23 +1,23 @@
 #include "opencv_draw.h"
 #include <QDebug>
 #include <QRgb>
-#define DRAW_ARGSUSE 0b110110111111
+#define OPENCV_DRAW_ARGSUSE 0b110110111111
 
 static QStringList opencv_draw_boxs1;
 static QStringList opencv_draw_boxs2;
-static box_info dra_defualt_boxinfo[BOX_NUM]={
+static box_info opencv_draw_defualt_boxinfo[BOX_NUM]={
     {0, opencv_draw_boxs1 << "line" << "rectangle" << "circle" << "ellipse" << "polylines" << "puttext"},
     {0, opencv_draw_boxs2 << "实心" << "空心" },
     {}
 };
 
-static slider_info dra_defualt_slider[SLIDER_NUM]={
+static slider_info opencv_draw_defualt_slider[SLIDER_NUM]={
     {"line width", 1, 9, 1, 0, 3},
     {"radius", 1,201,10,1,10},
     {}
 };
 
-static line_info dra_defualt_line[LINE_NUM]={
+static line_info opencv_draw_defualt_line[LINE_NUM]={
     {"point1", ""},
     {"point2", ""},
     {"point3", ""},
@@ -28,7 +28,7 @@ static line_info dra_defualt_line[LINE_NUM]={
 
 opencv_draw::opencv_draw(args_info *_arginfo):arginfo(_arginfo)
 {
-    arginfo->argsuse = DRAW_ARGSUSE;
+    arginfo->argsuse = OPENCV_DRAW_ARGSUSE;
 }
 
 opencv_draw::~opencv_draw()
@@ -46,11 +46,11 @@ QString opencv_draw::Getmethod(){
 
 void opencv_draw::GetDefualtInfo(args_info *readargsinfo){
     for (int i=0;i < BOX_NUM; i++)
-        readargsinfo->boxinfo[i]=dra_defualt_boxinfo[i];
+        readargsinfo->boxinfo[i]=opencv_draw_defualt_boxinfo[i];
     for (int i=0;i < SLIDER_NUM; i++)
-        readargsinfo->sliderinfo[i]=dra_defualt_slider[i];
+        readargsinfo->sliderinfo[i]=opencv_draw_defualt_slider[i];
     for (int i=0;i < LINE_NUM; i++)
-        readargsinfo->lineinfo[i]=dra_defualt_line[i];
+        readargsinfo->lineinfo[i]=opencv_draw_defualt_line[i];
     readargsinfo->argsuse = arginfo->argsuse;
 }
 

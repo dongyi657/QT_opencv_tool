@@ -7,7 +7,6 @@
 #include <QListWidgetItem>
 #include <QMouseEvent>
 #include "lib4opencvtoolmanager.h"
-#include "opencv2/opencv.hpp"
 using namespace cv;
 
 
@@ -95,6 +94,7 @@ protected:
     //重定义了QWidget类的鼠标事件方法
     bool event(QEvent * event);
     void wheelEvent(QWheelEvent* e);     //鼠标滑轮事件
+    virtual void keyPressEvent(QKeyEvent *ev);
 private:
     QLabel *statusLabel;
     QLabel *MousePosLabel;

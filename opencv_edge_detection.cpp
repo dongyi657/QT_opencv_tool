@@ -1,21 +1,21 @@
 #include "opencv_edge_detection.h"
 #include <QDebug>
 
-#define EDGE_DET_ARGSUSE 0b10110000000
-static QStringList edge_detect_boxs1;
-static box_info edg_defualt_boxinfo[BOX_NUM]={
+#define opencv_edge_ARGSUSE 0b10110000000
+static QStringList opencv_edge_boxs1;
+static box_info opencv_edge_defualt_boxinfo[BOX_NUM]={
     {},
-    {0, edge_detect_boxs1<<"canny" << "sobel" << "laplacian"},
+    {0, opencv_edge_boxs1<<"canny" << "sobel" << "laplacian"},
     {}
 };
 
-static slider_info edg_defualt_slider[SLIDER_NUM]={
+static slider_info opencv_edge_defualt_slider[SLIDER_NUM]={
     {"fK(2n+1)", 0, 4, 1, 1, 1},
     {"edge size", 1, 9, 1, 15, 3},
     {}
 };
 
-static line_info edg_defualt_line[LINE_NUM]={
+static line_info opencv_edge_defualt_line[LINE_NUM]={
     {},
     {},
     {},
@@ -26,7 +26,7 @@ static line_info edg_defualt_line[LINE_NUM]={
 
 opencv_edge_detection::opencv_edge_detection(args_info *_arginfo):arginfo(_arginfo)
 {
-    arginfo->argsuse = EDGE_DET_ARGSUSE;
+    arginfo->argsuse = opencv_edge_ARGSUSE;
 }
 
 opencv_edge_detection::~opencv_edge_detection()
@@ -44,11 +44,11 @@ QString opencv_edge_detection::Getmethod(){
 
 void opencv_edge_detection::GetDefualtInfo(args_info *readargsinfo){
     for (int i=0;i < BOX_NUM; i++)
-        readargsinfo->boxinfo[i]=edg_defualt_boxinfo[i];
+        readargsinfo->boxinfo[i]=opencv_edge_defualt_boxinfo[i];
     for (int i=0;i < SLIDER_NUM; i++)
-        readargsinfo->sliderinfo[i]=edg_defualt_slider[i];
+        readargsinfo->sliderinfo[i]=opencv_edge_defualt_slider[i];
     for (int i=0;i < LINE_NUM; i++)
-        readargsinfo->lineinfo[i]=edg_defualt_line[i];
+        readargsinfo->lineinfo[i]=opencv_edge_defualt_line[i];
     readargsinfo->argsuse = arginfo->argsuse;
 }
 

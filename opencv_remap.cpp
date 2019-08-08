@@ -1,23 +1,23 @@
 #include "opencv_remap.h"
 #include <QDebug>
 #include <QRgb>
-#define REMAP_ARGSUSE 0b100110111010
+#define opencv_remap_ARGSUSE 0b100110111010
 
 static QStringList opencv_remap_boxs1;
 //static QStringList opencv_remap_boxs2;
-static box_info rem_defualt_boxinfo[BOX_NUM]={
+static box_info opencv_remap_defualt_boxinfo[BOX_NUM]={
     {0, opencv_remap_boxs1 << "重映射" << "src定点转三点仿射" << "转dst定点三点仿射" <<"角度比例仿射"},
     {},
     {}
 };
 
-static slider_info rem_defualt_slider[SLIDER_NUM]={
+static slider_info opencv_remap_defualt_slider[SLIDER_NUM]={
     {"旋转角度", 0, 360, 30, 0, 0},
     {"缩放比例", 1,100,10,1,10},
     {}
 };
 
-static line_info rem_defualt_line[LINE_NUM]={
+static line_info opencv_remap_defualt_line[LINE_NUM]={
     {"point1", ""},
     {"point2", ""},
     {"point3", ""},
@@ -28,7 +28,7 @@ static line_info rem_defualt_line[LINE_NUM]={
 
 opencv_remap::opencv_remap(args_info *_arginfo):arginfo(_arginfo)
 {
-    arginfo->argsuse = REMAP_ARGSUSE;
+    arginfo->argsuse = opencv_remap_ARGSUSE;
 }
 
 opencv_remap::~opencv_remap()
@@ -46,11 +46,11 @@ QString opencv_remap::Getmethod(){
 
 void opencv_remap::GetDefualtInfo(args_info *readargsinfo){
     for (int i=0;i < BOX_NUM; i++)
-        readargsinfo->boxinfo[i]=rem_defualt_boxinfo[i];
+        readargsinfo->boxinfo[i]=opencv_remap_defualt_boxinfo[i];
     for (int i=0;i < SLIDER_NUM; i++)
-        readargsinfo->sliderinfo[i]=rem_defualt_slider[i];
+        readargsinfo->sliderinfo[i]=opencv_remap_defualt_slider[i];
     for (int i=0;i < LINE_NUM; i++)
-        readargsinfo->lineinfo[i]=rem_defualt_line[i];
+        readargsinfo->lineinfo[i]=opencv_remap_defualt_line[i];
     readargsinfo->argsuse = arginfo->argsuse;
 }
 

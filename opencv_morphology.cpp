@@ -1,21 +1,21 @@
 #include "opencv_morphology.h"
 #include <QDebug>
 
-#define MORPHOLOGY_ARGSUSE 0b100100000000
-static QStringList morphology_boxs1;
-static box_info mor_defualt_boxinfo[BOX_NUM]={
-    {1,morphology_boxs1<<"膨胀" << "腐蚀" << "开运算" << "闭运算" << "形态学梯度" << "顶帽" << "黑帽"},
+#define opencv_morphology_ARGSUSE 0b100100000000
+static QStringList opencv_morphology_boxs1;
+static box_info opencv_morphology_defualt_boxinfo[BOX_NUM]={
+    {1,opencv_morphology_boxs1<<"膨胀" << "腐蚀" << "开运算" << "闭运算" << "形态学梯度" << "顶帽" << "黑帽"},
     {},
     {}
 };
 
-static slider_info mor_defualt_slider[SLIDER_NUM]={
+static slider_info opencv_morphology_defualt_slider[SLIDER_NUM]={
     {"kernel size", 0, 40, 1, 15, 5},
     {},
     {}
 };
 
-static line_info mor_defualt_line[LINE_NUM]={
+static line_info opencv_morphology_defualt_line[LINE_NUM]={
     {},
     {},
     {},
@@ -26,7 +26,7 @@ static line_info mor_defualt_line[LINE_NUM]={
 
 opencv_morphology::opencv_morphology(args_info *_arginfo):arginfo(_arginfo)
 {
-    arginfo->argsuse = MORPHOLOGY_ARGSUSE;
+    arginfo->argsuse = opencv_morphology_ARGSUSE;
 }
 
 opencv_morphology::~opencv_morphology()
@@ -44,11 +44,11 @@ QString opencv_morphology::Getmethod(){
 
 void opencv_morphology::GetDefualtInfo(args_info *readargsinfo){
     for (int i=0;i < BOX_NUM; i++)
-        readargsinfo->boxinfo[i]=mor_defualt_boxinfo[i];
+        readargsinfo->boxinfo[i]=opencv_morphology_defualt_boxinfo[i];
     for (int i=0;i < SLIDER_NUM; i++)
-        readargsinfo->sliderinfo[i]=mor_defualt_slider[i];
+        readargsinfo->sliderinfo[i]=opencv_morphology_defualt_slider[i];
     for (int i=0;i < LINE_NUM; i++)
-        readargsinfo->lineinfo[i]=mor_defualt_line[i];
+        readargsinfo->lineinfo[i]=opencv_morphology_defualt_line[i];
     readargsinfo->argsuse = arginfo->argsuse;
 }
 
