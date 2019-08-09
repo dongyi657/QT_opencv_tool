@@ -285,7 +285,7 @@ int MainWindow::Image_transform(bool Viewtransform)
     Mat srcImage;
     //Mat dstImage=QImageToMat(ui->label_ROI_info->pixmap()->toImage());
     //Mat dstImage=imread("C:/Users/H237428/Pictures/temp2.JPG");
-    Mat dstImage= m_srcImage(QRect2Rect(select_ROI));
+    Mat dstImage;
     int ret;
     int i=0;
     int count;

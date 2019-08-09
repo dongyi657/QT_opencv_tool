@@ -29,6 +29,7 @@ SOURCES += \
         lib4opencvtoolmanager.cpp \
         main.cpp \
         mainwindow.cpp \
+        opencv_corner_detection.cpp \
         opencv_draw.cpp \
         opencv_edge_detection.cpp \
         opencv_filter.cpp \
@@ -42,6 +43,7 @@ HEADERS += \
         lib4opencvtool.h \
         lib4opencvtoolmanager.h \
         mainwindow.h \
+        opencv_corner_detection.h \
         opencv_draw.h \
         opencv_edge_detection.h \
         opencv_filter.h \

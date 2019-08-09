@@ -6,24 +6,24 @@
 //截屏
 #include <QDebug>
 
-#define TEMPLATE_MATCH_ARGSUSE 0b110111000011
+#define opencv_template_match_ARGSUSE 0b110111000011
 #define MAX_MATCH_NUM 20
 static QStringList opencv_template_match_boxs1;
 static QStringList opencv_template_match_boxs2;
 //static QStringList opencv_template_match_boxs2;
-static box_info match_defualt_boxinfo[BOX_NUM]={
+static box_info opencv_template_match_defualt_boxinfo[BOX_NUM]={
     {0, opencv_template_match_boxs1 << "平方差" << "标准平方差" << "相关" <<"标准相关" << "正负相关" <<"标准正负相关"},
     {0, opencv_template_match_boxs2 << "打开图像中查找" << "屏幕查找" },
     {}
 };
 
-static slider_info match_defualt_slider[SLIDER_NUM]={
+static slider_info opencv_template_match_defualt_slider[SLIDER_NUM]={
     {"Line width", 1, 9, 1, 0, 3},
     {"Precision", 0, 100, 10, 90, 90},
     {"Matching number", 1, MAX_MATCH_NUM, 1, 0, 1}
 };
 
-static line_info match_defualt_line[LINE_NUM]={
+static line_info opencv_template_match_defualt_line[LINE_NUM]={
     {},
     {},
     {},
@@ -34,7 +34,7 @@ static line_info match_defualt_line[LINE_NUM]={
 
 opencv_template_match::opencv_template_match(args_info *_arginfo):arginfo(_arginfo)
 {
-    arginfo->argsuse = TEMPLATE_MATCH_ARGSUSE;
+    arginfo->argsuse = opencv_template_match_ARGSUSE;
 }
 
 opencv_template_match::~opencv_template_match()
@@ -52,11 +52,11 @@ QString opencv_template_match::Getmethod(){
 
 void opencv_template_match::GetDefualtInfo(args_info *readargsinfo){
     for (int i=0;i < BOX_NUM; i++)
-        readargsinfo->boxinfo[i]=match_defualt_boxinfo[i];
+        readargsinfo->boxinfo[i]=opencv_template_match_defualt_boxinfo[i];
     for (int i=0;i < SLIDER_NUM; i++)
-        readargsinfo->sliderinfo[i]=match_defualt_slider[i];
+        readargsinfo->sliderinfo[i]=opencv_template_match_defualt_slider[i];
     for (int i=0;i < LINE_NUM; i++)
-        readargsinfo->lineinfo[i]=match_defualt_line[i];
+        readargsinfo->lineinfo[i]=opencv_template_match_defualt_line[i];
     readargsinfo->argsuse = arginfo->argsuse;
 }
 

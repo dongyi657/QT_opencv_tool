@@ -7,6 +7,7 @@
 #include "opencv_template_match.h"
 #include "opencv_hough.h"
 #include "opencv_roi_processing.h"
+#include "opencv_corner_detection.h"
 
 QStringList includeMethods(){
 #ifdef OPENCV_MORPHOLOGY_H
@@ -32,6 +33,9 @@ QStringList includeMethods(){
 #endif
 #ifdef OPENCV_ROI_PROCESSING_H
     Digital_Image_Processing_Method<<OPENCV_ROI_PROCESSING_METHOD_NAME;
+#endif
+#ifdef OPENCV_CORNER_DETECTION_H
+    Digital_Image_Processing_Method<<OPENCV_CORNER_DETECTION_METHOD_NAME;
 #endif
     return Digital_Image_Processing_Method;
 }
@@ -84,6 +88,12 @@ lib4opencvtool* Lib4opencvtoolManager::create(args_info *_arginfo)
 #ifdef OPENCV_ROI_PROCESSING_H
     if (_arginfo->method_name==OPENCV_ROI_PROCESSING_METHOD_NAME){
         lib4opencvtool* lib4opencvPtr = new opencv_ROI_processing(_arginfo);
+        return lib4opencvPtr;
+    }
+#endif
+#ifdef OPENCV_ROI_PROCESSING_H
+    if (_arginfo->method_name==OPENCV_CORNER_DETECTION_METHOD_NAME){
+        lib4opencvtool* lib4opencvPtr = new opencv_corner_detection(_arginfo);
         return lib4opencvPtr;
     }
 #endif
